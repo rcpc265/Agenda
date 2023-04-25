@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateVisitRequest;
 use Illuminate\Http\Request;
 
-class VisitaController extends Controller
+class VisitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -19,28 +14,17 @@ class VisitaController extends Controller
 
     public function index()
     {
-        return view('visitas.index');
+        return view('visits.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('visits.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(CreateVisitRequest $request)
     {
-        //
+        // create()
     }
 
     /**

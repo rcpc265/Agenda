@@ -1,7 +1,8 @@
 @php
-  function is_active($expression) {
-    $expression = $expression . '*';
-    return request()->is($expression) ? 'active' : '';
+  function is_active($expression)
+  {
+      $expression = $expression . '*';
+      return request()->is($expression) ? 'active' : '';
   }
 @endphp
 
@@ -9,12 +10,12 @@
 <h6 class="navbar-heading text-muted">Gestión</h6>
 <ul class="navbar-nav">
   <li class="nav-item {{ is_active('home') }}">
-    <a class="nav-link {{ is_active('home') }}" href="./index.html">
+    <a class="nav-link {{ is_active('home') }}" href="{{ route('home') }}">
       <i class="ni ni-tv-2 text-danger"></i> Dashboard
     </a>
   </li>
-  <li class="nav-item {{ is_active('visitas') }}">
-    <a class="nav-link {{ is_active('visitas') }}" href="{{ route('visitas.index') }}">
+  <li class="nav-item {{ is_active('visits') }}">
+    <a class="nav-link {{ is_active('visits') }}" href="{{ route('visits.index') }}">
       <i class="ni ni-briefcase-24 text-blue"></i> Visitas
     </a>
   </li>
@@ -30,11 +31,12 @@
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{{ route('logout') }}"
-    onclick="event.preventDefault(); document.getElementById('formLogout').submit();"
-    >
+      onclick="event.preventDefault(); document.getElementById('formLogout').submit();">
       <i class="fas fa-sign-in-alt"></i> Cerrar sesión
     </a>
-    <form action="{{ route('logout') }}" method="POST" style="display: none;" id="formLogout"></form>
+    <form action="{{ route('logout') }}" method="POST" style="display: none;" id="formLogout">
+      @csrf
+    </form>
   </li>
 </ul>
 <!-- Divider -->

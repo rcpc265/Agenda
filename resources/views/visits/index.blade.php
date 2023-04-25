@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-@section('title', 'Visitas')
+@section('title', 'Mostar visitas')
 @section('content')
   <div class="card shadow">
     <div class="card-header border-1">
@@ -8,7 +8,7 @@
           <h2 class="mb-0">Visitas</h2>
         </div>
         <div class="col text-right">
-          <a href="{{ route('visitas.create') }}" class="btn btn-sm btn-primary">Nueva visita</a>
+          <a href="{{ route('visits.create') }}" class="btn btn-sm btn-primary">Nueva visita</a>
         </div>
       </div>
     </div>

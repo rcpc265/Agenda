@@ -23,6 +23,8 @@
     onclick="event.preventDefault(); document.getElementById('formLogout').submit();">
     <i class="fas fa-sign-in-alt"></i>
     <span>Cerrar sesión</span>
-    <form action="{{ route('logout') }}" method="POST" style="display: none;" id="formLogout"></form>
+    <form action="{{ route('logout') }}" method="POST" style="display: none;" id="formLogout">
+      @csrf
+    </form>
   </a>
 </div>

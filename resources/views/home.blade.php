@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-
+@section('title', 'Inicio')
 @section('content')
 
   <div class="row">
@@ -77,7 +77,7 @@
     </div>
   </div>
   <div class="row mt-5">
-    <div class="col-xl-12 mb-5 mb-xl-0">
+    <div class="col-xl-7 mb-5 mb-xl-0">
       <div class="card shadow">
         <div class="card-header border-1">
           <div class="row align-items-center">
@@ -176,9 +176,7 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xl-12">
+    <div class="col-xl-5">
       <div class="card shadow">
         <div class="card-header border-1">
           <div class="row align-items-center">
