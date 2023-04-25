@@ -1,17 +1,9 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VisitaController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,4 +11,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+// Ruta de las visitas
+Route::get('/visitas', [VisitaController::class, 'index'])->name('visitas.index');
+Route::get('/visitas/create', [VisitaController::class, 'create'])->name('visitas.create');
+Route::get('/visitas/{visita}/edit', [VisitaController::class, 'edit'])->name('visitas.edit');
+Route::post('/visitas', [VisitaController::class, 'store'])->name('visitas.store');

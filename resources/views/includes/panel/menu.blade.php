@@ -1,14 +1,21 @@
+@php
+  function is_active($expression) {
+    $expression = $expression . '*';
+    return request()->is($expression) ? 'active' : '';
+  }
+@endphp
+
 <!-- Heading -->
 <h6 class="navbar-heading text-muted">Gestión</h6>
 <ul class="navbar-nav">
-  <li class="nav-item  active ">
-    <a class="nav-link  active " href="./index.html">
+  <li class="nav-item {{ is_active('home') }}">
+    <a class="nav-link {{ is_active('home') }}" href="./index.html">
       <i class="ni ni-tv-2 text-danger"></i> Dashboard
     </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link " href="./examples/icons.html">
-      <i class="ni ni-briefcase-24 text-blue"></i> Especialidades
+  <li class="nav-item {{ is_active('visitas') }}">
+    <a class="nav-link {{ is_active('visitas') }}" href="{{ route('visitas.index') }}">
+      <i class="ni ni-briefcase-24 text-blue"></i> Visitas
     </a>
   </li>
   <li class="nav-item">
