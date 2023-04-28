@@ -13,13 +13,14 @@ class CreateVisitsTabe extends Migration
      */
     public function up()
     {
-        Schema::create('visits_tabe', function (Blueprint $table) {
+        Schema::create('visits', function (Blueprint $table) {
             $table->id();
             $table->string('subject');
-            $table->string('visit_name');
-            $table->datetime('agreed_date');
-            $table->string('visit_code');
-            $table->enum('status', ['scheduled', 'completed', 'cancelled'])->default('scheduled');
+            $table->string('name');
+            $table->datetime('start_date');
+            $table->datetime('end_date');
+            $table->string('code');
+            $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
             $table->string('office_name')->default('Alcaldía');
             $table->timestamps();
         });

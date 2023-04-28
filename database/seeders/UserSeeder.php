@@ -16,12 +16,14 @@ class UserSeeder extends Seeder
     public function run()
     {
         // User::factory(10)->create();
-        User::updateOrCreate([
-            'name' => 'Soporte',
-            'email' => 'soporte@soporte.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('soporte1'),
-            'remember_token' => Str::random(10),
-        ]);
+        User::updateOrCreate(
+            ['name' => 'Soporte'],
+            [
+                'email' => 'soporte@soporte.com',
+                'email_verified_at' => now(),
+                'password' => bcrypt('soporte1'),
+                'remember_token' => Str::random(10),
+            ]
+        );
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateVisitRequest;
+use App\Http\Requests\StoreVisitRequest;
+use App\Models\Visit;
 use Illuminate\Http\Request;
 
 class VisitController extends Controller
@@ -14,17 +15,20 @@ class VisitController extends Controller
 
     public function index()
     {
-        return view('visits.index');
+        $visits = Visit::orderBy('code')->paginate(5);
+        return view('visits.index', compact('visits'));
     }
 
     public function create()
     {
-        return view('visits.create');
+        $statuses = Visit::$statusTranslations;
+        return view('visits.create')->with(compact('statuses'));
     }
 
-    public function store(CreateVisitRequest $request)
+    public function store(StoreVisitRequest $request)
     {
-        // create()
+        Visit::create($request->validated());
+        return redirect()->route('visits.index')->with(['status' => 'Nueva visita creada']);
     }
 
     /**
