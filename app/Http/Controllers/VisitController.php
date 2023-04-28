@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVisitRequest;
 use App\Models\Visit;
-use Illuminate\Http\Request;
 
 class VisitController extends Controller
 {
@@ -15,7 +14,7 @@ class VisitController extends Controller
 
     public function index()
     {
-        $visits = Visit::orderBy('code')->paginate(5);
+        $visits = Visit::latest()->paginate(5);
         return view('visits.index', compact('visits'));
     }
 
@@ -27,8 +26,8 @@ class VisitController extends Controller
 
     public function store(StoreVisitRequest $request)
     {
-        Visit::create($request->validated());
-        return redirect()->route('visits.index')->with(['status' => 'Nueva visita creada']);
+        $visit = Visit::create($request->validated());
+        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue creada exitosamente!"]);
     }
 
     /**
@@ -42,37 +41,21 @@ class VisitController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Visit $visit)
     {
-        //
+        $statuses = Visit::$statusTranslations;
+        return view('visits.edit', compact('visit', 'statuses'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(StoreVisitRequest $request, Visit $visit)
     {
-        //
+        $visit->update($request->validated());
+        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue editada exitosamente!"]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Visit $visit)
     {
-        //
+        $visit->delete();
+        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue eliminada exitosamente!"]);
     }
 }

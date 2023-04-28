@@ -46,8 +46,12 @@
               </td>
               <td>{{ $visit->office_name }}</td>
               <td>
-                <a href="" class="btn btn-sm btn-primary">Editar</a>
-                <a href="" class="btn btn-sm btn-danger">Eliminar</a>
+                <form action="{{ route('visits.destroy', $visit) }}" method="POST">
+                  @csrf
+                  @method('DELETE')
+                  <a href="{{ route('visits.edit', $visit) }}" class="btn btn-sm btn-primary">Editar</a>
+                  <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                </form>
               </td>
             </tr>
           @endforeach
