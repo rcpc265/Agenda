@@ -19,9 +19,9 @@
       <form action="{{ route('visits.store') }}" method="POST">
         @csrf
         <div class="form-group">
-          <label class="form-label" for="subject">Asunto</label>
-          <input type="text" id="subject" name="subject" class="form-control" value="{{ old('subject') }}" autofocus>
-          @error('subject')
+          <label class="form-label" for="name">Nombre de la visita:</label>
+          <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+          @error('name')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>
@@ -29,9 +29,9 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="name">Nombre de la visita:</label>
-          <input type="text" name="name" class="form-control" value="{{ old('name') }}">
-          @error('name')
+          <label class="form-label" for="subject">Asunto</label>
+          <input type="text" id="subject" name="subject" class="form-control" value="{{ old('subject') }}" autofocus>
+          @error('subject')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>

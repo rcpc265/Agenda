@@ -18,12 +18,11 @@
     <div class="card-body">
       <form action="{{ route('visits.update', $visit) }}" method="POST">
         @csrf
-        @method("PUT") 
+        @method('PUT')
         <div class="form-group">
-          <label class="form-label" for="subject">Asunto</label>
-          <input type="text" id="subject" name="subject" class="form-control"
-            value="{{ old('subject', $visit->subject) }}" autofocus>
-          @error('subject')
+          <label class="form-label" for="name">Nombre de la visita:</label>
+          <input type="text" name="name" class="form-control" value="{{ old('name', $visit->name) }}">
+          @error('name')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>
@@ -31,9 +30,10 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="name">Nombre de la visita:</label>
-          <input type="text" name="name" class="form-control" value="{{ old('name', $visit->name) }}">
-          @error('name')
+          <label class="form-label" for="subject">Asunto</label>
+          <input type="text" id="subject" name="subject" class="form-control"
+            value="{{ old('subject', $visit->subject) }}" autofocus>
+          @error('subject')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>
@@ -91,7 +91,8 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="office_name">Nombre de la oficina:</label>
-          <input type="text" name="office_name" class="form-control" value="{{ old('office_name', $visit->office_name) }}">
+          <input type="text" name="office_name" class="form-control"
+            value="{{ old('office_name', $visit->office_name) }}">
           @error('office_name')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
