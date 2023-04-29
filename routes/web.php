@@ -14,4 +14,4 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Ruta de las visitas
-Route::resource('visits', WarehouseController::class);
+Route::resource('visits', VisitController::class);

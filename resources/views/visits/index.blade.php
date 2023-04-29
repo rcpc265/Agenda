@@ -55,13 +55,12 @@
               </td>
             </tr>
           @endforeach
-          <tr>
-            <td colspan="6" class="pl-3 pb-0 pt-3">
-              {{ $visits->links() }}
-            </td>
-          </tr>
         </tbody>
       </table>
+      <hr class="mt-1 mb-3">
+      <div class="card-body d-sm-flex justify-content-center py-0">
+        {{ $visits->links() }}
+      </div>
     </div>
   </div>
 @endsection
