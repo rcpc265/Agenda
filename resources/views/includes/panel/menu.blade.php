@@ -16,17 +16,12 @@
   </li>
   <li class="nav-item {{ is_active('visits') }}">
     <a class="nav-link {{ is_active('visits') }}" href="{{ route('visits.index') }}">
-      <i class="ni ni-briefcase-24 text-blue"></i> Visitas
+      <i class="fas fa-calendar-alt text-blue"></i> Visitas
     </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link " href="./examples/maps.html">
-      <i class="fas fa-stethoscope text-info"></i> Médicos
-    </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link " href="./examples/profile.html">
-      <i class="fas fa-bed text-warning"></i> Pacientes
+  <li class="nav-item {{ is_active('secretaries') }}">
+    <a class="nav-link {{ is_active('secretaries') }}" href="{{ route('secretaries.index') }}">
+      <i class="fas fa-female text-info"></i> Secretarias
     </a>
   </li>
   <li class="nav-item">

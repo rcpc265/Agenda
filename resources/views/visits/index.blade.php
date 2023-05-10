@@ -70,7 +70,7 @@
                   <div class="modal-body py-0 my-0">
                     ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la visita "{{ $visit->name }}"?
                   </div>
-                  <div class="modal-footer pt-2">
+                  <div class="modal-footer pt-3">
                     <form action="{{ route('visits.destroy', $visit) }}" method="POST">
                       @csrf
                       @method('DELETE')
