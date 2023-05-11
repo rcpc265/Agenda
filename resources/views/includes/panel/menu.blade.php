@@ -24,6 +24,11 @@
       <i class="fas fa-female text-info"></i> Secretarias
     </a>
   </li>
+  <li class="nav-item {{ is_active('visitors') }}">
+    <a class="nav-link {{ is_active('visitors') }}" href="{{ route('visitors.index') }}">
+      <i class="far fa-id-badge text-yellow"></i> Visitantes
+    </a>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="{{ route('logout') }}"
       onclick="event.preventDefault(); document.getElementById('formLogout').submit();">
@@ -43,11 +48,6 @@
   <li class="nav-item">
     <a class="nav-link" href="#">
       <i class="ni ni-books text-default"></i> Citas
-    </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">
-      <i class="ni ni-chart-bar-32 text-warning"></i> Desempeño Médico
     </a>
   </li>
 </ul>
