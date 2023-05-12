@@ -30,7 +30,9 @@ class StoreVisitRequest extends FormRequest
             'end_date' => 'required|date',
             'code' => 'required|string|max:255',
             'status' => 'required|in:pending,confirmed,canceled',
-            'office_name' => 'required|string|max:255'
+            'office_name' => 'required|string|max:255',
+            'visitor_id' => 'required|integer|exists:visitors,id',
+            'user_id' => 'required|integer|exists:users,id',
         ];
     }
 
@@ -43,7 +45,9 @@ class StoreVisitRequest extends FormRequest
             'end_date' => 'fecha de finalización',
             'code' => 'cargo',
             'status' => 'estado',
-            'office_name' => 'nombre de la oficina'
+            'office_name' => 'nombre de la oficina',
+            'visitor_id' => 'visitante',
+            'user_id' => 'user'
         ];
     }
 }

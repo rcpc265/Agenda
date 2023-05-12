@@ -16,7 +16,9 @@ class Visit extends Model
         'end_date',
         'code',
         'status',
-        'office_name'
+        'office_name',
+        'visitor_id',
+        'user_id'
     ];
 
     public static $statusTranslations = [

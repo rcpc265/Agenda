@@ -31,7 +31,7 @@
             <th scope="col">Asunto</th>
             <th scope="col">Cargo</th>
             <th scope="col">Estado</th>
-            <th scope="col">Nombre de la oficina</th>
+            <th scope="col">Nombre de<br>la oficina</th>
             <th scope="col">Opciones</th>
           </tr>
         </thead>

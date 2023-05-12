@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVisitRequest;
 use App\Models\Visit;
+use App\Models\Visitor;
 
 class VisitController extends Controller
 {
@@ -21,7 +22,8 @@ class VisitController extends Controller
     public function create()
     {
         $statuses = Visit::$statusTranslations;
-        return view('visits.create')->with(compact('statuses'));
+        $visitors = Visitor::all();
+        return view('visits.create')->with(compact('statuses', 'visitors'));
     }
 
     public function store(StoreVisitRequest $request)

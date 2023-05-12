@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-@section('title', 'Mostar visitas')
+@section('title', 'Mostar informacion de las secretarias')
 @section('content')
   @if (session('status'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -38,14 +38,41 @@
               <th scope="row">{{ $secretary->name }}</th>
               <td>{{ $secretary->email }}</td>
               <td>
-                <form action="{{ route('secretaries.destroy', $secretary) }}" method="POST">
-                  @csrf
-                  @method('DELETE')
-                  <a href="{{ route('secretaries.edit', $secretary) }}" class="btn btn-sm btn-primary">Editar</a>
-                  <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-                </form>
+                <a href="{{ route('secretaries.edit', $secretary) }}" class="btn btn-sm btn-primary">Editar</a>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                  data-target="#deleteModal{{ $secretary->id }}">Eliminar</button>
               </td>
             </tr>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal{{ $secretary->id }}" tabindex="-1" role="dialog"
+              aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="deleteModalLabel">
+                      Confirmar acción
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body py-0 my-0">
+                    ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la secretaria "{{ $secretary->name }}"?
+                  </div>
+                  <div class="modal-footer pt-3">
+                    <form action="{{ route('secretaries.destroy', $secretary) }}" method="POST">
+                      @csrf
+                      @method('DELETE')
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-danger">Confirmar</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           @endforeach
         </tbody>
       </table>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSecretaryRequest;
 use App\Models\User;
+use App\Models\Visit;
 use Illuminate\Http\Request;
 
 class SecretaryController extends Controller
@@ -18,15 +20,14 @@ class SecretaryController extends Controller
         return view('secretaries.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreSecretaryRequest $request)
     {
-        //
+        $secretary = User::create($request->validated());
+        return redirect()
+        ->route('secretaries.index')
+        ->with([
+            'status' => "¡La secretaria \"$secretary->name\" fue añadida exitosamente!"
+        ]);
     }
 
     /**
@@ -40,37 +41,27 @@ class SecretaryController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(User $secretary)
     {
-        //
+        return view('secretaries.edit', compact('secretary'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(StoreSecretaryRequest $request, User $secretary)
     {
-        //
+        $secretary->update($request->validated());
+        return redirect()
+        ->route('secretaries.index')
+        ->with([
+            'status' => "¡Los datos de la secretaria \"$secretary->name\" fueron editados exitosamente!"
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(User $secretary)
     {
-        //
+        $secretary->delete();
+        return redirect()->route('secretaries.index')
+        ->with([
+            'status' => "¡Los datos de la secretaria \"$secretary->name\" fueron eliminados exitosamente!"
+        ]);
     }
 }
