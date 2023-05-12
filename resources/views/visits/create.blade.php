@@ -94,10 +94,9 @@
             </div>
           @enderror
         </div>
-
         <label class="form-label" for="visitor_id">Seleccionar visitante:</label>
         <div class="form-group row">
-          <div class="col">
+          <div class="col pr-0">
             <select id="visitor_id" name="visitor_id" class="form-control">
               @foreach ($visitors as $visitor)
                 <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
@@ -106,7 +105,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-md-auto">
+          <div class="col-auto">
             <button type="button" class="btn btn-success form-control">
               <i class="fas fa-plus"></i>
             </button>
