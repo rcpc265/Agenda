@@ -16,6 +16,13 @@
   <link href="{{ asset('js/plugins/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet" />
   <!-- CSS Files -->
   <link href="{{ asset('css/argon-dashboard.css?v=1.1.2') }}" rel="stylesheet" />
+  <!-- Choices JS Styles-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <style>
+    .choices__inner {
+      background-color: white;
+    }
+  </style>
 </head>
 
 <body class="">
@@ -89,17 +96,17 @@
         <!-- Brand -->
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="./index.html">Dashboard</a>
         <!-- Form -->
-        @if(request()->is('home*'))
-        <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-          <div class="form-group mb-0">
-            <div class="input-group input-group-alternative">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
+        @if (request()->is('home*'))
+          <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+            <div class="form-group mb-0">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input class="form-control" placeholder="Search" type="text">
               </div>
-              <input class="form-control" placeholder="Search" type="text">
             </div>
-          </div>
-        </form>
+          </form>
         @endif
         <!-- User -->
         <ul class="navbar-nav align-items-center d-none d-md-flex">
@@ -147,7 +154,9 @@
         application: "argon-dashboard-free"
       });
   </script>
-  @yield('script')
+  <!-- Include Choices JavaScript (latest) -->
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  @stack('script')
 </body>
 
 </html>

@@ -26,9 +26,9 @@ class StoreVisitorRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'entity' => 'required|string|max:255',
-            'dni' => 'nullable|string|size:8',
-            'phone_number' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255'
+            'dni' => 'nullable|string|size:8|unique:visitors,dni',
+            'phone_number' => 'nullable|string|max:255|unique:visitors,phone_number',
+            'email' => 'nullable|email|max:255|unique:visitors,email'
         ];
     }
 

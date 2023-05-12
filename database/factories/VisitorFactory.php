@@ -16,9 +16,9 @@ class VisitorFactory extends Factory
         return [
             'name' => $this->faker->name,
             'entity' => $this->faker->company,
-            'dni' => $this->faker->optional()->randomNumber(8, true),
+            'dni' => $this->faker->unique()->randomNumber(8, true),
             'phone_number' => $this->faker->optional()->phoneNumber,
-            'email' => $this->faker->optional()->email,
+            'email' => $this->faker->unique()->email(),
         ];
     }
 }

@@ -17,7 +17,7 @@ class CreateVisitorsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('entity');
-            $table->string('dni')->unique()->nullable();
+            $table->string('dni')->unique();
             $table->string('phone_number')->unique()->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamps();

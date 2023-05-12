@@ -95,30 +95,46 @@
           @enderror
         </div>
 
+        <label class="form-label" for="visitor_id">Seleccionar visitante:</label>
+        <div class="form-group row">
+          <div class="col">
+            <select id="visitor_id" name="visitor_id" class="form-control">
+              @foreach ($visitors as $visitor)
+                <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
+                  {{ $visitor->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-auto">
+            <button type="button" class="btn btn-success form-control">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          @error('visitor_id')
+            <div class="col alert alert-danger rounded py-2 mt-2 mb-1">{{ $message }}</div>
+          @enderror
+        </div>
+        <div class="d-none">
+          <input value="{{ auth()->user()->id }}" name="user_id">
+        </div>
         <button type="submit" class="btn btn-sm btn-primary">Crear visita</button>
       </form>
     </div>
   </div>
 @endsection
 
-@section('script')
+@push('script')
   <script>
-    $(document).ready(function() {
-      const firstError = $('.error-alert:first');
+    // Get all the form-control selectors
+    const formControls = document.querySelectorAll('select.form-control');
 
-      // check if there are error alerts
-      if (firstError.length) {
-        // scroll to the first error
-        $('html, body').animate({
-          scrollTop: firstError.offset().top - 250
-        }, 400, 'swing', function() {
-          // focus on the closest input field
-          firstError.closest('.form-group').find('.form-control').focus();
-        });
-      } else {
-        // focus on the first element with autofocus
-        $('[autofocus]').focus();
-      }
-    })
+    // Loop through each form control and create a Choices instance
+    formControls.forEach(formControl => {
+      new Choices(formControl);
+    });
   </script>
-@endsection
+@endpush
+
+<!-- Error handling script -->
+@include('includes.form.error')
