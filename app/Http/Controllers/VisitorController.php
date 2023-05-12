@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVisitorRequest;
 use App\Models\Visitor;
+use Exception;
 
 class VisitorController extends Controller
 {
@@ -21,6 +22,15 @@ class VisitorController extends Controller
 
     public function store(StoreVisitorRequest $request)
     {
+        if ($request->ajax()) {
+            $visitor = Visitor::create($request->validated());
+            return response()->json([
+                'message' => "New visitor with name: \"{$visitor->name}\" added",
+                'id' => $visitor->id,
+                'name' => $visitor->name
+            ], 200);
+        }
+
         $visitor = Visitor::create($request->validated());
         return redirect()
             ->route('visitors.index')
