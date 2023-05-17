@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVisitorRequest;
 use App\Models\Visitor;
-use Exception;
 
 class VisitorController extends Controller
 {
@@ -16,8 +15,8 @@ class VisitorController extends Controller
 
     public function create()
     {
-        $visitors = Visitor::latest()->paginate(5);
-        return view('visitors.create')->with(compact('visitors'));
+        $entities = Visitor::$entities;
+        return view('visitors.create', compact('entities'));
     }
 
     public function store(StoreVisitorRequest $request)

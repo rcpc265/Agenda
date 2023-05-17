@@ -145,8 +145,14 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="modal_entity">Entidad:</label>
-              <input type="text" id="modal_entity" name="modal_entity" class="form-control">
+              <label class="form-label" form="modal_entity">Seleccionar entidad:</label>
+              <select class="form-control" name="modal_entity" title="Seleccionar entidad">
+                @foreach ($entities as $entity)
+                  <option id="modal_entity" value="{{ $entity }}" {{ old('entity') === $entity ? 'selected' : '' }}>
+                    {{ $entity }}
+                  </option>
+                @endforeach
+              </select>
               <div class="d-none" id="modal_error_entity">
                 <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
@@ -165,7 +171,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="modal_phone_number">Número de celular:</label>
+              <label class="form-label" for="modal_phone_number">Número de celular (opcional):</label>
               <input type="text" id="modal_phone_number" name="modal_phone_number" class="form-control">
               <div class="d-none" id="modal_error_phone_number">
                 <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
@@ -175,7 +181,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="modal_email">Correo electrónico:</label>
+              <label class="form-label" for="modal_email">Correo electrónico (opcional):</label>
               <input type="text" id="modal_email" name="modal_email" class="form-control">
               <div class="d-none" id="modal_error_email">
                 <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
@@ -186,7 +192,8 @@
             </div>
           </div>
           <div class="modal-footer pt-2">
-            <button type="button" class="discard-product btn btn-danger mr-2" data-dismiss="modal" id="cancel-btn">Cancelar</button>
+            <button type="button" class="discard-product btn btn-danger mr-2" data-dismiss="modal"
+              id="cancel-btn">Cancelar</button>
             <button id="add-visitor" type="submit" class="btn btn-md btn-success">Crear visitante</button>
           </div>
         </form>
