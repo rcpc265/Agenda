@@ -35,7 +35,7 @@
       </button>
       <!-- Brand -->
       <a class="navbar-brand pt-0" href="./index.html">
-        <img src="{{ asset('img/brand/blue.png') }}" class="navbar-brand-img" alt="...">
+        {{-- <img src="{{ asset('img/brand/blue.png') }}" class="navbar-brand-img" alt="..."> --}}
       </a>
       <!-- User -->
       <ul class="nav align-items-center d-md-none">
@@ -129,7 +129,7 @@
     </nav>
     <!-- End Navbar -->
     <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-4 pt-md-6">
+    <div class="header bg-gradient-info pb-8 pt-4 pt-md-6">
     </div>
     <div class="container-fluid mt--7">
       @yield('content')

@@ -24,7 +24,7 @@
         <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
             <div class="container px-4">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ asset('img/brand/white.png') }}" />
+                    {{-- <img src="{{ asset('img/brand/white.png') }}" /> --}}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
             </div>
         </nav>
         <!-- Header -->
-        <div class="header bg-gradient-primary py-6 py-lg-7">
+        <div class="header bg-gradient-bluedark py-6 py-lg-7">
             <div class="container">
                 <div class="header-body text-center mb-7">
                     <div class="row justify-content-center">
