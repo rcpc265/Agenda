@@ -186,7 +186,7 @@
             </div>
           </div>
           <div class="modal-footer pt-2">
-            <button type="button" class="discard-product btn btn-danger mr-2" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="discard-product btn btn-danger mr-2" data-dismiss="modal" id="cancel-btn">Cancelar</button>
             <button id="add-visitor" type="submit" class="btn btn-md btn-success">Crear visitante</button>
           </div>
         </form>
@@ -203,21 +203,31 @@
     const formControls = document.querySelectorAll('select.form-control');
     const visitor_choices = new Choices('#visitor_id');
 
+    const fields = ['name', 'entity', 'dni', 'phone_number', 'email'];
+    const fieldValues = {};
+
+    const fieldErrors = {};
+    for (const field of fields) {
+      fieldErrors[field] = {
+        box: $(`#modal_error_${field}`),
+        message: $(`#modal_error_message_${field}`)
+      };
+    }
+
+    $("#cancel-btn").click(function(event) {
+      $('#modal_form').trigger('reset');
+
+      // Hide all the error boxes
+      for (const field in fieldErrors) {
+        fieldErrors[field].box.addClass('d-none');
+      }
+    });
+
     $("#add-visitor").click(function(event) {
       event.preventDefault();
-      const fields = ['name', 'entity', 'dni', 'phone_number', 'email'];
-      const fieldValues = {};
       for (const field of fields) {
         fieldValues[field] = $(`#modal_${field}`).val();
       };
-
-      const fieldErrors = {};
-      for (const field of fields) {
-        fieldErrors[field] = {
-          box: $(`#modal_error_${field}`),
-          message: $(`#modal_error_message_${field}`)
-        };
-      }
 
       $.ajax({
         url: '{{ route('visitors.store') }}',
@@ -231,12 +241,7 @@
         success: function(response) {
           console.log(response.message);
           $('#add-new-visitor').modal('hide');
-          $('#modal_form input').val('');
-
-          // Hide all the error boxes
-          for (const field in fieldErrors) {
-            fieldErrors[field].box.addClass('d-none');
-          }
+          $('#cancel-btn').click();
 
           // Add the new visitor to the select
           visitor_choices.setChoices([{

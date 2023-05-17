@@ -22,8 +22,8 @@ class CreateVisitsTable extends Migration
             $table->string('code');
             $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
             $table->string('office_name')->default('Alcaldía');
-            $table->foreignId('visitor_id')->constrained('visitors');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('visitor_id')->constrained('visitors')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

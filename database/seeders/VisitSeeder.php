@@ -14,6 +14,6 @@ class VisitSeeder extends Seeder
      */
     public function run()
     {
-        Visit::factory(30)->create();
+        Visit::factory(15)->create();
     }
 }
