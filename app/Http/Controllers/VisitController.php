@@ -23,7 +23,8 @@ class VisitController extends Controller
     {
         $statuses = Visit::$statusTranslations;
         $visitors = Visitor::all();
-        return view('visits.create')->with(compact('statuses', 'visitors'));
+        $entities = Visitor::$entities;
+        return view('visits.create')->with(compact('statuses', 'visitors', 'entities'));
     }
 
     public function store(StoreVisitRequest $request)

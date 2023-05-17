@@ -29,8 +29,14 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="entity">Entidad:</label>
-          <input type="text" name="entity" class="form-control" value="{{ old('entity') }}">
+          <label class="form-label">Seleccionar entidad:</label>
+          <select class="form-control" name="entity" title="Seleccionar entidad">
+            @foreach ($entities as $entity)
+              <option value="{{ $entity }}" {{ old('entity') === $entity ? 'selected' : '' }}>
+                {{ $entity }}
+              </option>
+            @endforeach
+          </select>
           @error('entity')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
@@ -49,7 +55,7 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="phone_number">Número de celular:</label>
+          <label class="form-label" for="phone_number">Número de celular (opcional):</label>
           <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number') }}">
           @error('phone_number')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
@@ -59,7 +65,7 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="email">Correo electrónico:</label>
+          <label class="form-label" for="email">Correo electrónico (opcional):</label>
           <input type="text" name="email" class="form-control" value="{{ old('email') }}">
           @error('email')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">

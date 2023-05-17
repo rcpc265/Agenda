@@ -16,4 +16,9 @@ class Visitor extends Model
         'phone_number',
         'email',
     ];
+
+    public static $entities = [
+        'Persona natural',
+        'Persona jurídica'
+    ];
 }
