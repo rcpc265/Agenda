@@ -38,9 +38,11 @@
             </div>
           @enderror
         </div>
+
+        {{-- Fecha Y HORA --}}
         <div class="form-group">
-          <label class="form-label" for="start_date">Fecha inicial:</label>
-          <input type="datetime-local" name="start_date" class="form-control" value="{{ old('start_date') }}">
+          <label class="form-label" for="date">Fecha:</label>
+          <input type="date" min="<?php echo date('Y-m-d'); ?>" name="start_date" class="form-control" value="{{ old('start_date') }}">
           @error('start_date')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
@@ -48,16 +50,28 @@
             </div>
           @enderror
         </div>
-        <div class="form-group">
-          <label class="form-label" for="end_date">Fecha final:</label>
-          <input type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date') }}">
-          @error('end_date')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
+        <div id="horas" class="formulario__campo">
+          <label class="formulario__label">Seleccionar Hora</label>
+          <style>
+            #horas li:hover {
+              background-color: gray;
+              color: white;
+              cursor: pointer;
+            }
+          </style>
+          <ul id="horas" class="rounded-pill">
+            <li data-hora-id="1" class="border border-dark" style="border-radius: 10px; padding: 7px; display: inline-block; hover:  ">10:00 - 11:00</li>
+            <li data-hora-id="2" class="border border-dark" style="border-radius: 10px; padding: 7px; display: inline-block;">11:00 - 12:00</li>
+            <li data-hora-id="3" class="border border-dark" style="border-radius: 10px; padding: 7px; display: inline-block;">14:00 - 15:00</li>
+            <li data-hora-id="4" class="border border-dark" style="border-radius: 10px; padding: 7px; display: inline-block;">15:00 - 16:00</li>
+            
+          </ul>
+  
+          
+      </div>
+        {{-- -------- --}}
+
+     
         <div class="form-group">
           <label class="form-label" for="code">Cargo:</label>
           <input type="text" name="code" class="form-control" value="{{ old('code') }}">

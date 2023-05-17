@@ -26,7 +26,7 @@ class Visit extends Model
     ];
 
     public static $statusColors = [
-        'pending' => 'text-primary',
+        'pending' => 'text-yellow',
         'confirmed' => 'text-success',
         'canceled' => 'text-danger'
     ];
