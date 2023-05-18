@@ -17,7 +17,8 @@ class CreateVisitorsTable extends Migration
             $table->id();
             $table->string('name');
             $table->enum('entity', ['Persona natural', 'Persona jurídica']);
-            $table->string('dni')->unique();
+            $table->string('ruc', 11)->nullable();
+            $table->string('dni', 8)->unique();
             $table->string('phone_number')->unique()->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamps();

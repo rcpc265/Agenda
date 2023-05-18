@@ -146,9 +146,9 @@
             </div>
             <div class="form-group">
               <label class="form-label" form="modal_entity">Seleccionar entidad:</label>
-              <select class="form-control" name="modal_entity" title="Seleccionar entidad">
+              <select class="form-control" name="modal_entity" title="Seleccionar entidad" id="modal_entity">
                 @foreach ($entities as $entity)
-                  <option id="modal_entity" value="{{ $entity }}" {{ old('entity') === $entity ? 'selected' : '' }}>
+                  <option value="{{ $entity }}" {{ old('entity') === $entity ? 'selected' : '' }}>
                     {{ $entity }}
                   </option>
                 @endforeach
@@ -157,6 +157,16 @@
                 <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_entity"></strong>
+                </div>
+              </div>
+            </div>
+            <div class="form-group d-none" id="modal_ruc_display">
+              <label class="form-label" for="modal_ruc">RUC:</label>
+              <input type="text" name="modal_ruc" id="modal_ruc" class="form-control">
+              <div class="d-none" id="modal_error_ruc">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+                  <i class="fas fa-exclamation-circle mr-1"></i>
+                  <strong id="modal_error_message_ruc"></strong>
                 </div>
               </div>
             </div>
@@ -210,7 +220,7 @@
     const formControls = document.querySelectorAll('select.form-control');
     const visitor_choices = new Choices('#visitor_id');
 
-    const fields = ['name', 'entity', 'dni', 'phone_number', 'email'];
+    const fields = ['name', 'entity', 'ruc', 'dni', 'phone_number', 'email'];
     const fieldValues = {};
 
     const fieldErrors = {};
@@ -223,6 +233,10 @@
 
     $("#cancel-btn").click(function(event) {
       $('#modal_form').trigger('reset');
+      // Select personas naturales by default
+      $('#modal_entity').val('Persona natural');
+      $('#modal_ruc_display').addClass('d-none');
+      $('#modal_ruc_display input').prop('disabled', true);
 
       // Hide all the error boxes
       for (const field in fieldErrors) {
@@ -278,6 +292,24 @@
         }
       })
     })
+  </script>
+@endpush
+
+@push('script')
+  <script>
+    // Show or hide RUC input
+    $('#modal_entity').on('change', function() {
+      if (this.value === 'Persona jurídica') {
+        $('#modal_ruc_display').removeClass('d-none');
+        $('#modal_ruc_display input').prop('disabled', false);
+      } else {
+        $('#modal_ruc_display').addClass('d-none');
+        $('#modal_ruc_display input').prop('disabled', true);
+      }
+    });
+
+    // Execute at least once
+    $('#entity').trigger('change');
   </script>
 @endpush
 
