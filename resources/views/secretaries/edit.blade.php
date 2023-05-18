@@ -41,8 +41,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="password">Contraseña:</label>
-          <input type="text" name="password" class="form-control" value="{{ old('password', $secretary->password) }}"
-            id="password">
+          <input type="password" name="password" class="form-control" id="password">
           @error('password')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>

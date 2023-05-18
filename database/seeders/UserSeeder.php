@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
@@ -21,7 +22,7 @@ class UserSeeder extends Seeder
             [
                 'email' => 'soporte@soporte.com',
                 'email_verified_at' => now(),
-                'password' => bcrypt('soporte1'),
+                'password' => Hash::make('soporte1'),
                 'remember_token' => Str::random(10),
             ]
         );
