@@ -21,26 +21,21 @@ class Visit extends Model
         'user_id'
     ];
 
-    public static $statusTranslations = [
-        'pending' => 'Pendiente',
-        'confirmed' => 'Confirmado',
-        'canceled' => 'Cancelado'
+    public static $statusColors = [
+        'Pendiente' => 'text-primary',
+        'Confirmado' => 'text-success',
+        'Cancelado' => 'text-danger'
     ];
 
-    public static $statusColors = [
-        'pending' => 'text-primary',
-        'confirmed' => 'text-success',
-        'canceled' => 'text-danger'
+    public static $statuses = [
+        'Pendiente',
+        'Confirmado',
+        'Cancelado'
     ];
 
     private function capitalizeValue($value)
     {
         return ucwords(strtolower($value));
-    }
-
-    public function getStatusDisplayAttribute(): string
-    {
-        return self::$statusTranslations[$this->status];
     }
 
     public function getStatusColorAttribute(): string

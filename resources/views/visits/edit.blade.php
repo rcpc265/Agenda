@@ -75,10 +75,10 @@
         <div class="form-group">
           <label class="form-label" for="status">Seleccionar estado:</label>
           <select class="form-control" name="status" title="Seleccionar estado">
-            @foreach ($statuses as $statusValue => $statusDisplay)
-              <option value="{{ $statusValue }}"
-                {{ old('status', $visit->status) === $statusValue ? 'selected' : '' }}>
-                {{ $statusDisplay }}
+            @foreach ($statuses as $status)
+              <option value="{{ $status }}"
+                {{ old('status', $visit->status) === $status ? 'selected' : '' }}>
+                {{ $status }}
               </option>
             @endforeach
           </select>

@@ -69,22 +69,6 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="modal_status">Seleccionar estado:</label>
-          <select class="form-control" name="status" title="Seleccionar estado">
-            @foreach ($statuses as $statusValue => $statusDisplay)
-              <option value="{{ $statusValue }}" {{ old('status') === $statusValue ? 'selected' : '' }}>
-                {{ $statusDisplay }}
-              </option>
-            @endforeach
-          </select>
-          @error('status')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
-        <div class="form-group">
           <label class="form-label" for="modal_office_name">Nombre de la oficina:</label>
           <input type="text" name="office_name" class="form-control" value="{{ old('office_name') }}">
           @error('office_name')
@@ -94,10 +78,11 @@
             </div>
           @enderror
         </div>
-        <label class="form-label" for="modal_visitor_id">Seleccionar visitante:</label>
+        <label class="form-label" for="modal_visitor_id">Visitante:</label>
         <div class="form-group row">
           <div class="col pr-0">
             <select id="visitor_id" name="visitor_id" class="form-control">
+              <option value="" disabled selected>Seleccione un visitante</option>
               @foreach ($visitors as $visitor)
                 <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
                   {{ $visitor->name }}
@@ -111,10 +96,13 @@
               <i class="fas fa-plus"></i>
             </button>
           </div>
-          @error('visitor_id')
-            <div class="col alert alert-danger rounded py-2 mt-2 mb-1">{{ $message }}</div>
-          @enderror
         </div>
+        @error('visitor_id')
+          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert" role="alert">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            <strong>{{ $message }}</strong>
+          </div>
+        @enderror
         <div class="d-none">
           <input value="{{ auth()->user()->id }}" name="user_id">
         </div>
@@ -314,4 +302,4 @@
 @endpush
 
 <!-- Error handling script -->
-@include('includes.form.error')
+{{-- @include('includes.form.error') --}}

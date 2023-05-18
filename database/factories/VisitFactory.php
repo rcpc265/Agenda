@@ -23,7 +23,7 @@ class VisitFactory extends Factory
             'start_date' => $this->faker->date(),
             'end_date' => $this->faker->date(),
             'code' => $this->faker->randomNumber(8, true),
-            'status' => $this->faker->randomElement(['pending', 'confirmed', 'canceled']),
+            'status' => $this->faker->randomElement(['Pendiente', 'Confirmado', 'Cancelado']),
             'office_name' => $this->faker->word(),
             'visitor_id' => $this->faker->randomElement($visitors),
             'user_id' => $this->faker->randomElement($users)

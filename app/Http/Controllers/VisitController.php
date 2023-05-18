@@ -21,10 +21,9 @@ class VisitController extends Controller
 
     public function create()
     {
-        $statuses = Visit::$statusTranslations;
-        $visitors = Visitor::all();
+        $visitors = Visitor::orderBy('name')->get();
         $entities = Visitor::$entities;
-        return view('visits.create')->with(compact('statuses', 'visitors', 'entities'));
+        return view('visits.create')->with(compact('visitors', 'entities'));
     }
 
     public function store(StoreVisitRequest $request)
@@ -33,12 +32,6 @@ class VisitController extends Controller
         return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue creada exitosamente!"]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
@@ -46,7 +39,7 @@ class VisitController extends Controller
 
     public function edit(Visit $visit)
     {
-        $statuses = Visit::$statusTranslations;
+        $statuses = Visit::$statuses;
         return view('visits.edit', compact('visit', 'statuses'));
     }
 

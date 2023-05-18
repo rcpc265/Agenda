@@ -20,7 +20,7 @@ class CreateVisitsTable extends Migration
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->string('code');
-            $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
+            $table->enum('status', ['Pendiente', 'Confirmado', 'Cancelado'])->default('Pendiente');
             $table->string('office_name')->default('Alcaldía');
             $table->foreignId('visitor_id')->constrained('visitors')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

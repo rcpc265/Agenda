@@ -42,7 +42,7 @@
               <td>{{ $visit->subject }}</td>
               <td>{{ $visit->code }}</td>
               <td class="font-weight-bold {{ $visit->statusColor }}">
-                {{ $visit->statusDisplay }}
+                {{ $visit->status }}
               </td>
               <td>{{ $visit->office_name }}</td>
               <td>

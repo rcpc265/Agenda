@@ -29,9 +29,9 @@ class StoreVisitRequest extends FormRequest
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'code' => 'required|string|max:255',
-            'status' => 'required|in:pending,confirmed,canceled',
+            'status' => 'nullable|in:Pendiente,Confirmado,Cancelado',
             'office_name' => 'required|string|max:255',
-            'visitor_id' => 'required|integer|exists:visitors,id',
+            'visitor_id' => 'required|exists:visitors,id',
             'user_id' => 'required|integer|exists:users,id',
         ];
     }
@@ -48,6 +48,13 @@ class StoreVisitRequest extends FormRequest
             'office_name' => 'nombre de la oficina',
             'visitor_id' => 'visitante',
             'user_id' => 'user'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'visitor_id.exists' => 'Seleccione un visitante.',
         ];
     }
 }

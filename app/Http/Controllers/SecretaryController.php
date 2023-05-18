@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSecretaryRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class SecretaryController extends Controller
 {
@@ -21,7 +22,7 @@ class SecretaryController extends Controller
     public function store(StoreSecretaryRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
+        $data['password'] = Hash::make($data['password']);
         $secretary = User::create($data);
         return redirect()
             ->route('secretaries.index')
@@ -49,7 +50,7 @@ class SecretaryController extends Controller
     public function update(StoreSecretaryRequest $request, User $secretary)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']);
+        $data['password'] = Hash::make($data['password']);
         $secretary->update($data);
         return redirect()
             ->route('secretaries.index')
