@@ -302,4 +302,4 @@
 @endpush
 
 <!-- Error handling script -->
-{{-- @include('includes.form.error') --}}
+@include('includes.form.error')
