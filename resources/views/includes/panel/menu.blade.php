@@ -9,11 +9,11 @@
 <!-- Heading -->
 <h6 class="navbar-heading text-muted">Gestión</h6>
 <ul class="navbar-nav">
-  <li class="nav-item {{ is_active('home') }}">
+  {{-- <li class="nav-item {{ is_active('home') }}">
     <a class="nav-link {{ is_active('home') }}" href="{{ route('home') }}">
       <i class="ni ni-tv-2 text-danger"></i> Dashboard
     </a>
-  </li>
+  </li> --}}
   <li class="nav-item {{ is_active('visits') }}">
     <a class="nav-link {{ is_active('visits') }}" href="{{ route('visits.index') }}">
       <i class="fas fa-calendar-alt text-blue"></i> Visitas
