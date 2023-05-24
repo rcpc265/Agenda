@@ -38,26 +38,58 @@
             </div>
           @enderror
         </div>
-        <div class="form-group">
-          <label class="form-label" for="modal_start_date">Fecha inicial:</label>
-          <input type="datetime-local" name="start_date" class="form-control" value="{{ old('start_date') }}">
-          @error('start_date')
+        {{-- <div class="form-group">
+          <label class="form-label" for="modal_start_date">Fecha inicial:</label> --}}
+        <input id="start_date" type="datetime-local" name="start_date" class="form-control"
+          value="{{ old('start_date') }}" hidden>
+        {{-- @error('start_date')
+            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+              <i class="fas fa-exclamation-circle mr-1"></i>
+              <strong>{{ $message }}</strong>
+            </div>
+          @enderror --}}
+        {{-- </div> --}}
+        {{-- <div class="form-group">
+          <label class="form-label" for="modal_end_date">Fecha final:</label> --}}
+        <input id="end_date" type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date') }}"
+          hidden>
+        {{-- @error('end_date')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>
             </div>
           @enderror
-        </div>
+        </div> --}}
         <div class="form-group">
-          <label class="form-label" for="modal_end_date">Fecha final:</label>
-          <input type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date') }}">
-          @error('end_date')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
+          <label class="form-label mb--1">
+            Seleccionar horario:
+            <span id="datepicker-btn" class="ml-1 badge-pill btn badge-info py-1">
+              <i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha
+            </span>
+          </label>
+          <div class="button-radio d-flex justify-content-between flex-wrap flex-column flex-sm-row mr--2">
+            <button type="button"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">10:00
+              -
+              11:00</button>
+            <button type="button"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3"
+              disabled>11:00 - 12:00</button>
+            <button type="button"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">12:00
+              -
+              13:00</button>
+            <button type="button"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">13:00
+              -
+              14:00</button>
+            <button type="button"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">14:00
+              -
+              15:00</button>
+          </div>
         </div>
+
         <div class="form-group">
           <label class="form-label" for="modal_code">Cargo:</label>
           <input type="text" name="code" class="form-control" value="{{ old('code') }}">
@@ -301,5 +333,134 @@
   </script>
 @endpush
 
+@push('script')
+  <script>
+    $(document).ready(function() {
+      // Give the date a more verbose format
+      function formatDate(dateStr) {
+        const date = moment(dateStr, 'DD/MM/YYYY').locale('es');
+        const formattedDate = date.format('dddd, D [de] MMMM [de] YYYY');
+        return formattedDate;
+      }
+
+      // Get selected range
+      function getSelectedHour() {
+        const activeButton = $('.button-radio .btn.active');
+        const buttonText = activeButton.text();
+        const hourStr = buttonText.split(/\s-\s/)[0];
+        return !hourStr ? null : hourStr;
+      }
+
+      // Get selected date
+      function getSelectedDate() {
+        const selectedDate = $('#datepicker-btn').datepicker('getFormattedDate');
+        return selectedDate;
+      }
+
+      // Get full date
+      function getFullDate() {
+        const selectedDate = getSelectedDate();
+        const selectedHour = getSelectedHour();
+        if (!selectedHour || !selectedDate) {
+          return null;
+        }
+        const fullDate = moment(`${selectedDate} ${selectedHour}`, 'DD/MM/YYYY HH:mm');
+        // Return a valid string that can be saved inside a date input
+        return fullDate;
+      }
+
+      // Fill form start date and end date
+      function fillFormDates() {
+        const fullDate = getFullDate();
+        if (!fullDate) {
+          return
+        }
+        $('#start_date').val(fullDate.format('YYYY-MM-DD HH:mm'));
+        // The end date must be an hour after the full date
+        $('#end_date').val(moment(fullDate).add(1, 'hour').format('YYYY-MM-DD HH:mm'));
+        console.log($('#start_date').val());
+        console.log($('#end_date').val());
+      }
+
+      // Translate into spanish
+      $.fn.datepicker.dates['es'] = {
+        days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"],
+        daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+          "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ],
+        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        today: "Hoy",
+        clear: "Limpiar",
+        format: "dd/mm/yyyy",
+        titleFormat: "MM yyyy",
+        /* Leverages same syntax as 'format' */
+        weekStart: 0
+      };
+
+      // Initialize datepicker
+      $('#datepicker-btn').datepicker({
+        language: 'es',
+        format: 'dd/mm/yyyy',
+        startDate: new Date(),
+        todayBtn: 'linked',
+        todayHighlight: true,
+        toggleActive: true,
+      });
+
+      // Update button text when date changes
+      $('#datepicker-btn').on('changeDate', function() {
+        const isSelected = $(this).datepicker('getDate');
+        if (isSelected !== null) {
+          const selectedDate = getSelectedDate();
+          const formattedDate = formatDate(selectedDate);
+          $('#datepicker-btn').html(
+            `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;${formattedDate}`
+          );
+
+          fillFormDates();
+        } else {
+          $('#datepicker-btn').html(
+            `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha`
+          );
+          return
+        }
+      });
+
+      // Turn everything that has the class "button-radio" into an advanced button radio group
+      $('.button-radio button').click(function() {
+        if (!$(this).is(':disabled') && !$(this).hasClass('active')) {
+          // The button is selected
+          $(this).parent().find('.active').removeClass('active');
+          $(this).addClass('active');
+
+          fillFormDates();
+        } else if ($(this).hasClass('active')) {
+          $(this).removeClass('active');
+        }
+      });
+
+
+      // Restore previous date
+      let oldStartDate = "{{ old('start_date') }}";
+      if (oldStartDate) {
+        console.log(oldStartDate)
+        // oldStartDate = moment(oldStartDate, 'DD/MM/YYYY HH:mm');
+        // turn old start date into a date object
+        oldStartDate = new Date(oldStartDate);
+        console.log(oldStartDate)
+        $('#datepicker-btn').datepicker('setDate', oldStartDate);
+        $('#datepicker-btn').trigger('changeDate');
+        // get the hour from the oldStartDate
+        // const startHour = oldStartDate.format('HH:mm');
+        // console.log(startHour)
+        // // click the button group that starts with the startHour
+        // $(`.button-radio .btn:contains("${startHour}")`).click();
+      }
+    });
+  </script>
+@endpush
+
 <!-- Error handling script -->
-@include('includes.form.error')
+{{-- @include('includes.form.error') --}}

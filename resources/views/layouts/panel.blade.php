@@ -18,15 +18,26 @@
   <link href="{{ asset('css/argon-dashboard.css?v=1.1.2') }}" rel="stylesheet" />
   <!-- Choices JS Styles-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <!-- Bootstrap Datepicker CSS files -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
   <style>
     .choices__inner {
       background-color: white;
+    }
+
+    button[disabled] {
+      cursor: not-allowed;
     }
   </style>
 </head>
 
 <body class="">
   <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+    {{-- Change max width 150px --}}
+    {{-- <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main" --}}
+      {{-- style="max-width: 200px !important;"> --}}
     <div class="container-fluid">
       <!-- Toggler -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main"
@@ -34,9 +45,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Brand -->
-      <a class="navbar-brand pt-0" href="./index.html">
-        {{-- <img src="{{ asset('img/brand/blue.png') }}" class="navbar-brand-img" alt="..."> --}}
-      </a>
+      {{-- <a class="navbar-brand pt-0" href="./index.html">
+        <img src="{{ asset('img/brand/blue.png') }}" class="navbar-brand-img" alt="...">
+      </a> --}}
       <!-- User -->
       <ul class="nav align-items-center d-md-none">
         <li class="nav-item dropdown">
@@ -156,6 +167,12 @@
   </script>
   <!-- Include Choices JavaScript (latest) -->
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <!-- Bootrap Datepicker JS files-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+  <!-- Moment JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <!-- Moment.js Spanish locale file -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.min.js"></script>
   @stack('script')
 </body>
 
