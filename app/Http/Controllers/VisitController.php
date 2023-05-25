@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVisitRequest;
 use App\Models\Visit;
 use App\Models\Visitor;
+use Illuminate\Http\Request;
 
 class VisitController extends Controller
 {
@@ -13,9 +14,17 @@ class VisitController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $visits = Visit::latest()->paginate(5);
+        $search = $request->input('search');
+
+        $visits = Visit::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%$search%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+
         return view('visits.index', compact('visits'));
     }
 

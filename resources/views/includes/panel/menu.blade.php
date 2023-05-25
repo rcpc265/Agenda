@@ -4,6 +4,11 @@
       $expression = $expression . '*';
       return request()->is($expression) ? 'active' : '';
   }
+
+  function is_admin()
+  { 
+    return auth()->user()->role == 'admin' ? '' : 'd-none';
+  }
 @endphp
 
 <!-- Heading -->
@@ -19,12 +24,12 @@
       <i class="fas fa-calendar-alt text-blue"></i> Visitas
     </a>
   </li>
-  <li class="nav-item {{ is_active('secretaries') }}">
+  <li class="nav-item {{ is_active('secretaries') }} {{ is_admin() }}">
     <a class="nav-link {{ is_active('secretaries') }}" href="{{ route('secretaries.index') }}">
       <i class="fas fa-female text-info"></i> Secretarias
     </a>
   </li>
-  <li class="nav-item {{ is_active('visitors') }}">
+  <li class="nav-item {{ is_active('visitors') }} {{ is_admin() }}">
     <a class="nav-link {{ is_active('visitors') }}" href="{{ route('visitors.index') }}">
       <i class="far fa-id-badge text-yellow"></i> Visitantes
     </a>
