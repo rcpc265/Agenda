@@ -18,7 +18,7 @@
     <link href="{{ asset('css/argon-dashboard.css?v=1.1.2') }}" rel="stylesheet" />
 </head>
 
-<body class="bg-default">
+<body class="bg-white-70">
     <div class="main-content">
         <!-- Navbar -->
         <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
@@ -53,14 +53,14 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
                             <a class="nav-link nav-link-icon" href="{{ route('register') }}">
-                                <i class="ni ni-circle-08"></i>
-                                <span class="nav-link-inner--text">Regístrate</span>
+                                <i class="ni ni-circle-08 text-dark"></i>
+                                <span class="nav-link-inner--text text-dark">Regístrate</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-icon" href="{{ route('login') }}">
-                                <i class="ni ni-key-25"></i>
-                                <span class="nav-link-inner--text">Iniciar sesión</span>
+                                <i class="ni ni-key-25 text-dark"></i>
+                                <span class="nav-link-inner--text text-dark">Iniciar sesión</span>
                             </a>
                         </li>
                     </ul>
@@ -68,22 +68,31 @@
             </div>
         </nav>
         <!-- Header -->
-        <div class="header bg-gradient-bluedark py-6 py-lg-7">
-            <div class="container">
-                <div class="header-body text-center mb-7">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5 col-md-6">
-                            <h1 class="text-white">@yield('title', 'Bienvenidos')</h1>
-                        </div>
-                    </div>
-                </div>
+        <div class="header bg-gradient-white-70 py-6 py-lg-10">
+        <div class="container">
+    <div class="header-body text-center mb-6">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-20">
+                <img src="http://actividades.munipuno.gob.pe/vendor/adminlte/dist/img/logomuni.png" height="80">
+                <b style="font-size: 30px; color: black;">Visitas MPP</b>
             </div>
-            <div class="separator separator-bottom separator-skew zindex-100">
+        </div>
+    </div>
+</div>
+
+            <!-- <a href="http://actividades.munipuno.gob.pe/home">
+                <img src="..\..\..\..\argon-dashboard-master\assets\img\theme\react.png" alt="Admin Logo" height="50">
+                
+                
+                <b>Visitas</b>MPP
+
+            </a> -->
+            <!-- <div class="separator separator-bottom separator-skew zindex-100">
                 <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
                     xmlns="http://www.w3.org/2000/svg">
                     <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
                 </svg>
-            </div>
+            </div> -->
         </div>
         @yield('content')
 
