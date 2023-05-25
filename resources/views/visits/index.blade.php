@@ -15,7 +15,16 @@
     <div class="card-header border-1">
       <div class="row align-items-center">
         <div class="col">
-          <h2 class="mb-0">Visitas</h2>
+          <h2 class="mb-0">Visitas
+          </h2>
+        </div>
+        <div class="col-9">
+          <form class="form-inline pr-5" action="{{ route('visits.index') }}">
+            <input name="search" type="text" class="form-control pr-5" placeholder="Nombre de la visita">
+            <div class="input-group-append ml-2">
+              <button class="btn btn-outline-primary" type="submit" id="button-addon2">Buscar</button>
+            </div>
+          </form>
         </div>
         <div class="col text-right">
           <a href="{{ route('visits.create') }}" class="btn btn-sm btn-primary">Nueva visita</a>
@@ -41,8 +50,10 @@
               <th scope="row">{{ $visit->name }}</th>
               <td>{{ $visit->subject }}</td>
               <td>{{ $visit->code }}</td>
-              <td class="font-weight-bold {{ $visit->statusColor }}">
-                {{ $visit->status }}
+              <td>
+                <span class="badge badge-pill badge-lg badge-{{ $visit->statusColor }}">
+                  {{ $visit->status }}
+                </span>
               </td>
               <td>{{ $visit->office_name }}</td>
               <td>
@@ -85,11 +96,12 @@
         </tbody>
       </table>
 
-
-      <hr class="mt-1 mb-3">
-      <div class="card-body d-sm-flex justify-content-center py-0">
-        {{ $visits->links() }}
-      </div>
+      @if ($visits->hasPages())
+        <hr class="mt-1 mb-3">
+        <div class="card-body d-sm-flex justify-content-center py-0">
+          {{ $visits->links() }}
+        </div>
+      @endif
     </div>
   </div>
 @endsection

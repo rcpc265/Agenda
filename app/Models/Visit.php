@@ -22,9 +22,9 @@ class Visit extends Model
     ];
 
     public static $statusColors = [
-        'Pendiente' => 'text-primary',
-        'Confirmado' => 'text-success',
-        'Cancelado' => 'text-danger'
+        'Pendiente' => 'primary',
+        'Confirmado' => 'success',
+        'Cancelado' => 'danger'
     ];
 
     public static $statuses = [
