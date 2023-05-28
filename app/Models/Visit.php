@@ -21,6 +21,11 @@ class Visit extends Model
         'user_id'
     ];
 
+    public function status()
+    {
+        return self::$statusColors;
+    }
+
     public static $statusColors = [
         'Pendiente' => 'primary',
         'Confirmado' => 'success',

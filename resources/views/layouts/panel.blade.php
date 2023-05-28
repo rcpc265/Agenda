@@ -30,14 +30,20 @@
     button[disabled] {
       cursor: not-allowed;
     }
+
+    [x-cloak] {
+      display: none !important;
+    }
   </style>
+  <!-- Alpine Core -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="">
   <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
     {{-- Change max width 150px --}}
     {{-- <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main" --}}
-      {{-- style="max-width: 200px !important;"> --}}
+    {{-- style="max-width: 200px !important;"> --}}
     <div class="container-fluid">
       <!-- Toggler -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main"

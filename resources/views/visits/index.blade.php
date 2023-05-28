@@ -10,7 +10,6 @@
         </button>
     </div>
   @endif
-
   <div class="card shadow">
     <div class="card-header border-1">
       <div class="row align-items-center">
@@ -22,7 +21,7 @@
           <form class="form-inline pr-5" action="{{ route('visits.index') }}">
             <input name="search" type="text" class="form-control pr-5" placeholder="Nombre de la visita">
             <div class="input-group-append ml-2">
-              <button class="btn btn-outline-primary" type="submit" id="button-addon2">Buscar</button>
+              <button class="btn btn-outline-primary" type="submit">Buscar</button>
             </div>
           </form>
         </div>
@@ -31,77 +30,127 @@
         </div>
       </div>
     </div>
-    <div class="table-responsive">
-      <!-- Projects table -->
-      <table class="table align-items-center table-flush">
-        <thead class="thead-light">
-          <tr>
-            <th scope="col">Nombre</th>
-            <th scope="col">Asunto</th>
-            <th scope="col">Cargo</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Nombre de<br>la oficina</th>
-            <th scope="col">Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($visits as $visit)
+    @if ($visits->isEmpty())
+      <div class="card px-4">
+        <div class="alert alert-warning py-1" role="alert">
+          <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
+          <span class="font-weight-bold">No se encontraron resultados</span>
+        </div>
+      </div>
+    @else
+      <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
             <tr>
-              <th scope="row">{{ $visit->name }}</th>
-              <td>{{ $visit->subject }}</td>
-              <td>{{ $visit->code }}</td>
-              <td>
-                <span class="badge badge-pill badge-lg badge-{{ $visit->statusColor }}">
-                  {{ $visit->status }}
-                </span>
-              </td>
-              <td>{{ $visit->office_name }}</td>
-              <td>
-                <a href="{{ route('visits.edit', $visit) }}" class="btn btn-sm btn-primary">Editar</a>
-
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                  data-target="#deleteModal{{ $visit->id }}">Eliminar</button>
-              </td>
+              <th scope="col">Nombre</th>
+              <th scope="col">Asunto</th>
+              <th scope="col">Cargo</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Nombre de<br>la oficina</th>
+              <th scope="col">Opciones</th>
             </tr>
+          </thead>
+          <tbody>
+            @push('script')
+              <script>
+                function storeStatus(id, status) {
+                  $.ajaxSetup({
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                  })
 
-            <!-- Modal -->
-            <div class="modal fade" id="deleteModal{{ $visit->id }}" tabindex="-1" role="dialog"
-              aria-labelledby="deleteModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h3 class="modal-title" id="deleteModalLabel">
-                      Confirmar acción
-                    </h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                  $.ajax({
+                    url: "{{ route('visits.status') }}",
+                    method: 'PATCH',
+                    data: JSON.stringify({
+                      id,
+                      status
+                    }),
+                    success: function(response) {
+                      console.log(response.message);
+                    },
+
+                    error: function(response) {
+                      console.log(`Error: ${response.responseJSON.error}`);
+                    }
+                  });
+                }
+              </script>
+            @endpush
+            @foreach ($visits as $visit)
+              <tr>
+                <th scope="row">{{ $visit->name }}</th>
+                <td>{{ $visit->subject }}</td>
+                <td>{{ $visit->code }}</td>
+                <td>
+                  <div x-data="{
+                      badges: [
+                          { status: 'Pendiente', color: 'badge-primary' },
+                          { status: 'Confirmado', color: 'badge-success' },
+                          { status: 'Cancelado', color: 'badge-danger' }
+                      ],
+                      currentIndex: 0,
+                      visitId: '{{ $visit->id }}',
+                      get status() { return this.badges[this.currentIndex].status; },
+                  }" x-init="currentIndex = badges.findIndex(badge => badge.status === '{{ $visit->status }}');">
+                    <button x-cloak type="button"
+                      x-on:click="currentIndex = (currentIndex + 1) % badges.length; storeStatus(visitId, status);"
+                      :class="['btn', 'btn-sm', 'badge-pill', 'badge', badges[currentIndex].color]">
+                      <span x-text="status"></span>
                     </button>
                   </div>
-                  <div class="modal-body py-0 my-0">
-                    ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la visita "{{ $visit->name }}"?
-                  </div>
-                  <div class="modal-footer pt-3">
-                    <form action="{{ route('visits.destroy', $visit) }}" method="POST">
-                      @csrf
-                      @method('DELETE')
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                      <button type="submit" class="btn btn-danger">Confirmar</button>
-                    </form>
+                </td>
+                <td>{{ $visit->office_name }}</td>
+                <td>
+                  <a href="{{ route('visits.edit', $visit) }}" class="btn btn-sm btn-primary">Editar</a>
+
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                    data-target="#deleteModal{{ $visit->id }}">Eliminar</button>
+                </td>
+              </tr>
+
+              <!-- Modal -->
+              <div class="modal fade" id="deleteModal{{ $visit->id }}" tabindex="-1" role="dialog"
+                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" id="deleteModalLabel">
+                        Confirmar acción
+                      </h3>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body py-0 my-0">
+                      ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la visita "{{ $visit->name }}"?
+                    </div>
+                    <div class="modal-footer pt-3">
+                      <form action="{{ route('visits.destroy', $visit) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          @endforeach
-        </tbody>
-      </table>
+            @endforeach
+          </tbody>
+        </table>
 
-      @if ($visits->hasPages())
-        <hr class="mt-1 mb-3">
-        <div class="card-body d-sm-flex justify-content-center py-0">
-          {{ $visits->links() }}
-        </div>
-      @endif
-    </div>
+        @if ($visits->hasPages())
+          <hr class="mt-1 mb-3">
+          <div class="card-body d-sm-flex justify-content-center py-0">
+            {{ $visits->links() }}
+          </div>
+        @endif
+      </div>
+    @endif
   </div>
 @endsection

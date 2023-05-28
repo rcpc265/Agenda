@@ -36,7 +36,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                   </div>
-                  <input class="form-control" placeholder="Correo Electrónico" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                  <input class="form-control" placeholder="Correo Electrónico" type="email" name="email" value="{{ old('email', 'soporte@soporte.com') }}" required autocomplete="email" autofocus>
                 </div>
               </div>
               <div class="form-group">
@@ -44,7 +44,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                   </div>
-                  <input class="form-control" placeholder="Contraseña" type="password" name="password" required autocomplete="current-password">
+                  <input class="form-control" placeholder="Contraseña" type="password" name="password" required autocomplete="current-password" value="soporte1">
                 </div>
               </div>
               <div class="custom-control custom-control-alternative custom-checkbox">

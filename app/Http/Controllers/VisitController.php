@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVisitRequest;
 use App\Models\Visit;
 use App\Models\Visitor;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class VisitController extends Controller
@@ -56,6 +59,21 @@ class VisitController extends Controller
     {
         $visit->update($request->validated());
         return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue editada exitosamente!"]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        try {
+            $visit = Visit::findOrFail($request->input('id'));
+            $visit->status = $request->input('status');
+            $visit->save();
+
+            return response()->json(['message' => 'The visit with an id of ' . $visit->id . ' was updated to ' . $visit->status], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Visit not found'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Error updating status'], 500);
+        }
     }
 
     public function destroy(Visit $visit)
