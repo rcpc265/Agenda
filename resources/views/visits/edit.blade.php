@@ -14,21 +14,22 @@
         </div>
       </div>
     </div>
+    
+    {{-- Display all errors --}}
+    @if ($errors->any())
+      <div class="alert alert-danger" role="alert">
+        <ul class="mb-0">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
 
     <div class="card-body">
       <form action="{{ route('visits.update', $visit) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="form-group">
-          <label class="form-label" for="name">Nombre de la visita:</label>
-          <input type="text" name="name" class="form-control" value="{{ old('name', $visit->name) }}">
-          @error('name')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
         <div class="form-group">
           <label class="form-label" for="subject">Asunto</label>
           <input type="text" id="subject" name="subject" class="form-control"
@@ -63,16 +64,6 @@
           @enderror
         </div>
         <div class="form-group">
-          <label class="form-label" for="code">Cargo:</label>
-          <input type="text" name="code" class="form-control" value="{{ old('code', $visit->code) }}">
-          @error('code')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
-        <div class="form-group">
           <label class="form-label" for="status">Seleccionar estado:</label>
           <select class="form-control" name="status" title="Seleccionar estado">
             @foreach ($statuses as $status)
@@ -83,17 +74,6 @@
             @endforeach
           </select>
           @error('status')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="office_name">Nombre de la oficina:</label>
-          <input type="text" name="office_name" class="form-control"
-            value="{{ old('office_name', $visit->office_name) }}">
-          @error('office_name')
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>

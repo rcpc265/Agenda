@@ -11,12 +11,9 @@ class Visit extends Model
 
     protected $fillable = [
         'subject',
-        'name',
         'start_date',
         'end_date',
-        'code',
         'status',
-        'office_name',
         'visitor_id',
         'user_id'
     ];
@@ -58,8 +55,8 @@ class Visit extends Model
         $this->attributes['subject'] = $this->capitalizeValue($value);
     }
 
-    public function setOfficeNameAttribute($value)
+    public function visitor()
     {
-        $this->attributes['office_name'] = $this->capitalizeValue($value);
+        return $this->belongsTo(Visitor::class);
     }
 }

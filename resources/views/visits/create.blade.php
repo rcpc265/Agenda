@@ -19,16 +19,6 @@
       <form action="{{ route('visits.store') }}" method="POST">
         @csrf
         <div class="form-group">
-          <label class="form-label" for="modal_name">Nombre de la visita:</label>
-          <input type="text" name="name" class="form-control" value="{{ old('name') }}">
-          @error('name')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
-        <div class="form-group">
           <label class="form-label" for="modal_subject">Asunto</label>
           <input type="text" id="subject" name="subject" class="form-control" value="{{ old('subject') }}" autofocus>
           @error('subject')
@@ -38,6 +28,31 @@
             </div>
           @enderror
         </div>
+        <label class="form-label" for="modal_visitor_id">Visitante:</label>
+        <div class="form-group row">
+          <div class="col pr-0">
+            <select id="visitor_id" name="visitor_id" class="form-control">
+              <option value="" disabled selected>Seleccione un visitante</option>
+              @foreach ($visitors as $visitor)
+                <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
+                  {{ $visitor->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-success form-control" modal-launcher data-toggle="modal"
+              data-target="#add-new-visitor" id="modal-launcher">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        @error('visitor_id')
+          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert" role="alert">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            <strong>{{ $message }}</strong>
+          </div>
+        @enderror
         {{-- <div class="form-group">
           <label class="form-label" for="modal_start_date">Fecha inicial:</label> --}}
         <input id="start_date" type="datetime-local" name="start_date" class="form-control"
@@ -90,51 +105,6 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="modal_code">Cargo:</label>
-          <input type="text" name="code" class="form-control" value="{{ old('code') }}">
-          @error('code')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="modal_office_name">Nombre de la oficina:</label>
-          <input type="text" name="office_name" class="form-control" value="{{ old('office_name') }}">
-          @error('office_name')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div>
-        <label class="form-label" for="modal_visitor_id">Visitante:</label>
-        <div class="form-group row">
-          <div class="col pr-0">
-            <select id="visitor_id" name="visitor_id" class="form-control">
-              <option value="" disabled selected>Seleccione un visitante</option>
-              @foreach ($visitors as $visitor)
-                <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
-                  {{ $visitor->name }}
-                </option>
-              @endforeach
-            </select>
-          </div>
-          <div class="col-auto">
-            <button type="button" class="btn btn-success form-control" modal-launcher data-toggle="modal"
-              data-target="#add-new-visitor" id="modal-launcher">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-        </div>
-        @error('visitor_id')
-          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert" role="alert">
-            <i class="fas fa-exclamation-circle mr-1"></i>
-            <strong>{{ $message }}</strong>
-          </div>
-        @enderror
         <div class="d-none">
           <input value="{{ auth()->user()->id }}" name="user_id">
         </div>

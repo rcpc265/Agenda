@@ -20,8 +20,9 @@
         <div class="col-9">
           <form class="form-inline pr-5" action="{{ route('visits.index') }}">
             <div x-data="{ isActive: false }" class="input-group-append">
-              <input x-cloak @input="isActive = true" @blur="isActive = false" :class="['form-control mr-2']" type="text">
-              <button x-cloak :class="{ 'btn': true, 'btn-outline-primary': true, 'active': isActive }"
+              <input x-cloak @input="isActive = true" @blur="isActive = false" :class="['form-control mr-2 pr-5']"
+                type="text" style="height: 30px !important; padding-right: 100px !important;" name="subject">
+              <button x-cloak :class="{ 'py-0': true, 'btn': true, 'btn-outline-primary': true, 'active': isActive }"
                 type="submit">Buscar</button>
             </div>
           </form>
@@ -44,11 +45,11 @@
         <table class="table align-items-center table-flush">
           <thead class="thead-light">
             <tr>
-              <th scope="col">Nombre</th>
               <th scope="col">Asunto</th>
-              <th scope="col">Cargo</th>
               <th scope="col">Estado</th>
-              <th scope="col">Nombre de<br>la oficina</th>
+              <th scope="col">Nombre del visitante</th>
+              <th scope="col">Fecha</th>
+              <th scope="col" class="text-center">Hora de inicio y<br>Hora final</th>
               <th scope="col">Opciones</th>
             </tr>
           </thead>
@@ -83,9 +84,7 @@
             @endpush
             @foreach ($visits as $visit)
               <tr>
-                <th scope="row">{{ $visit->name }}</th>
-                <td>{{ $visit->subject }}</td>
-                <td>{{ $visit->code }}</td>
+                <td scope="row">{{ $visit->subject }}</td>
                 <td>
                   <div x-data="{
                       badges: [
@@ -104,7 +103,10 @@
                     </button>
                   </div>
                 </td>
-                <td>{{ $visit->office_name }}</td>
+                <td>{{ $visit->visitor->name }}</td>
+                <td>{{ Carbon\Carbon::parse($visit->start_date)->format('d/m') }}</td>
+                <td class="text-center">{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
+                  {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
                 <td>
                   <a href="{{ route('visits.edit', $visit) }}" class="btn btn-sm btn-primary">Editar</a>
 

@@ -19,14 +19,14 @@ class VisitController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search = $request->input('subject');
 
         $visits = Visit::query()
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%$search%");
+                return $query->where('subject', 'like', "%$search%");
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->paginate(10);
 
         return view('visits.index', compact('visits'));
     }
@@ -41,7 +41,7 @@ class VisitController extends Controller
     public function store(StoreVisitRequest $request)
     {
         $visit = Visit::create($request->validated());
-        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue creada exitosamente!"]);
+        return redirect()->route('visits.index')->with(['status' => "¡La visita fue creada exitosamente!"]);
     }
 
     public function show($id)
@@ -61,7 +61,7 @@ class VisitController extends Controller
         return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue editada exitosamente!"]);
     }
 
-    public function updateStatus(Request $request)
+    public function updateStatus(Request $request): JsonResponse
     {
         try {
             $visit = Visit::findOrFail($request->input('id'));

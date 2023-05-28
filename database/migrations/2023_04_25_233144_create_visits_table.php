@@ -16,12 +16,9 @@ class CreateVisitsTable extends Migration
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
             $table->string('subject');
-            $table->string('name');
             $table->datetime('start_date');
             $table->datetime('end_date');
-            $table->string('code');
             $table->enum('status', ['Pendiente', 'Confirmado', 'Cancelado'])->default('Pendiente');
-            $table->string('office_name')->default('Alcaldía');
             $table->foreignId('visitor_id')->constrained('visitors')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

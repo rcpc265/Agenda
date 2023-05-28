@@ -22,12 +22,9 @@ class VisitFactory extends Factory
 
         return [
             'subject' => $this->faker->word(),
-            'name' => $this->faker->word(),
             'start_date' => Carbon::now(),
             'end_date' => Carbon::now()->addHour(),
-            'code' => $this->faker->randomNumber(8, true),
             'status' => $this->faker->randomElement(['Pendiente', 'Confirmado', 'Cancelado']),
-            'office_name' => $this->faker->word(),
             'visitor_id' => $this->faker->randomElement($visitors),
             'user_id' => $this->faker->randomElement($users)
         ];
