@@ -19,9 +19,10 @@
         </div>
         <div class="col-9">
           <form class="form-inline pr-5" action="{{ route('visits.index') }}">
-            <input name="search" type="text" class="form-control pr-5" placeholder="Nombre de la visita">
-            <div class="input-group-append ml-2">
-              <button class="btn btn-outline-primary" type="submit">Buscar</button>
+            <div x-data="{ isActive: false }" class="input-group-append">
+              <input x-cloak @input="isActive = true" @blur="isActive = false" :class="['form-control mr-2']" type="text">
+              <button x-cloak :class="{ 'btn': true, 'btn-outline-primary': true, 'active': isActive }"
+                type="submit">Buscar</button>
             </div>
           </form>
         </div>
