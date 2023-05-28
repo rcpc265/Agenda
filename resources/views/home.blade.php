@@ -65,7 +65,7 @@
                         // Create a new event per each visit
                         visits.forEach(visit => {
                           calendar.addEvent({
-                            title: visit.name,
+                            title: visit.subject,
                             start: visit.start_date,
                             end: visit.end_date,
                             allDay: false,
@@ -76,7 +76,6 @@
                               successColor : dangerColor,
                             borderColor: visit.status === 'Pendiente' ? primaryColor : visit.status === 'Confirmado' ?
                               successColor : dangerColor,
-                            // borderColor: 'transparent',
                             // classNames: ['font-weight-bold'],
                           });
                         });
