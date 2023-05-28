@@ -4,7 +4,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SecretaryController;
 use App\Http\Controllers\VisitController;
 use App\Http\Controllers\VisitorController;
-use App\Models\Visit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +13,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [VisitController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Ruta de las visitas
 Route::patch('visits/status', [VisitController::class, 'updateStatus'])->name('visits.status');

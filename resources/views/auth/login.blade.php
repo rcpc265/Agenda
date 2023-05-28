@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div class="custom-control custom-control-alternative custom-checkbox">
-                <input name="remember" class="custom-control-input" id="remember" type="checkbox" {{ old('remember') ? 'checked' : '' }}>
+                <input name="remember" class="custom-control-input" id="remember" type="checkbox" {{ old('remember', 'checked') ? 'checked' : '' }}>
                 <label class="custom-control-label" for="remember">
                   <span class="text-muted">Recordar Sesión</span>
                 </label>

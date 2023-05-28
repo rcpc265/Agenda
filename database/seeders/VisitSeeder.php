@@ -18,7 +18,7 @@ class VisitSeeder extends Seeder
     public function run(): void
     {
         // Generate a random amount of visits for each day of the week
-        $this->generateVisitsPerDay(5);
+        $this->generateVisitsPerDay(80);
     }
 
     /**
@@ -30,7 +30,9 @@ class VisitSeeder extends Seeder
     public function generateVisitsPerDay(int $numVisits): array
     {
         $visits = [];
-        $date = Carbon::now();
+        // $date = Carbon::now();
+        // Rest 1 month to the current date
+        $date = Carbon::now()->subMonth();
         for ($i = 0; $i < $numVisits; $i++) {
             $visits[] = $this->generateVisits($date);
             $date->addDay();
@@ -53,7 +55,7 @@ class VisitSeeder extends Seeder
         }
 
         // Generate a random amount of time ranges
-        $timeRanges = $this->timeRangeGenerator($date, rand(0, sizeof(self::$defaultRanges)));
+        $timeRanges = $this->timeRangeGenerator($date, rand(1, sizeof(self::$defaultRanges)));
 
         $visits = [];
         // Create visits with different time ranges
@@ -88,7 +90,8 @@ class VisitSeeder extends Seeder
 
             $overlap = false;
             foreach ($timeRanges as $previousTimeRange) {
-                if ($timeRange['start'] < $previousTimeRange['end'] && $timeRange['end'] > $previousTimeRange['start']) {
+                // Check if the range is the same as the previous one
+                if ($timeRange['start'] == $previousTimeRange['start']) {
                     $overlap = true;
                     break;
                 }

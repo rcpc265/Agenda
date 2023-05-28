@@ -6,7 +6,7 @@
   }
 
   function is_admin()
-  { 
+  {
     return auth()->user()->role == 'admin' ? '' : 'd-none';
   }
 @endphp
@@ -14,14 +14,16 @@
 <!-- Heading -->
 <h6 class="navbar-heading text-muted">Gestión</h6>
 <ul class="navbar-nav">
-  {{-- <li class="nav-item {{ is_active('home') }}">
+  <li class="nav-item {{ is_active('home') }}">
     <a class="nav-link {{ is_active('home') }}" href="{{ route('home') }}">
-      <i class="ni ni-tv-2 text-danger"></i> Dashboard
+        <i class="fas fa-calendar-alt text-danger"></i> Calendario
     </a>
-  </li> --}}
+  </li>
   <li class="nav-item {{ is_active('visits') }}">
     <a class="nav-link {{ is_active('visits') }}" href="{{ route('visits.index') }}">
-      <i class="fas fa-calendar-alt text-blue"></i> Visitas
+      {{-- <i class="fas fa-calendar-alt text-blue"></i> Visitas --}}
+      {{-- icono de tabla --}}
+        <i class="fas fa-table text-blue"></i> Visitas
     </a>
   </li>
   <li class="nav-item {{ is_active('secretaries') }} {{ is_admin() }}">

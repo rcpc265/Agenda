@@ -5,24 +5,87 @@
   <div class="row">
     <div class="col-md-12 mb-4">
       <div class="card">
-        <div class="card-header">{{ __('Dashboard') }}</div>
-
         <div class="card-body">
-          @if (session('status'))
-            <div class="alert alert-success" role="alert">
-              {{ session('status') }}
-            </div>
-          @endif
+          <div class="card shadow col">
+            <div class="card-body border-1">
+              <div class="row align-items-center">
+                <div class="col">
+                  <div id="calendar">
+                    @push('script')
+                      <script>
+                        const calendarEl = document.getElementById('calendar');
+                        const calendar = new FullCalendar.Calendar(calendarEl, {
+                          views: {
+                            timeGridDay: {
+                              allDaySlot: false,
+                              allDayText: false,
+                            },
+                            timeGridWeek: {
+                              allDaySlot: false,
+                              allDayText: false,
+                            }
+                          },
+                          slotMinTime: '08:30:00',
+                          slotMaxTime: '13:30:00',
+                          slotDuration: '00:15:00',
+                          slotLabelInterval: '00:30:00',
+                          slotLabelFormat: {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            omitZeroMinute: false,
+                            meridiem: 'short'
+                          },
+                          noEventsText: 'No hay más visitas para mostrar',
+                          initialView: 'timeGridWeek',
+                          locale: 'es',
+                          buttonText: {
+                            today: 'Hoy',
+                            month: 'Mes',
+                            week: 'Semana',
+                            day: 'Día',
+                            list: 'Lista'
+                          },
+                          headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'listWeek,timeGridWeek,dayGridMonth',
+                          },
+                          height: 'auto',
+                        });
+                        calendar.render();
 
-          {{ __('You are logged in!') }}
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-7">
-      <div class="card bg-gradient-default shadow">
-        <div class="card-header bg-transparent">
-          <div class="row">
-            
+                        calendar.setOption('rerenderDelay', 1);
+
+                        const visits = @json($visits);
+                        // Get colors
+                        const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+                        const successColor = getComputedStyle(document.documentElement).getPropertyValue('--success');
+                        const dangerColor = getComputedStyle(document.documentElement).getPropertyValue('--danger');
+
+                        // Create a new event per each visit
+                        visits.forEach(visit => {
+                          calendar.addEvent({
+                            title: visit.name,
+                            start: visit.start_date,
+                            end: visit.end_date,
+                            allDay: false,
+                            textColor: visit.status === 'Pendiente' ? primaryColor : visit.status === 'Confirmado' ?
+                              successColor : dangerColor,
+                            textColor: 'white',
+                            backgroundColor: visit.status === 'Pendiente' ? primaryColor : visit.status === 'Confirmado' ?
+                              successColor : dangerColor,
+                            borderColor: visit.status === 'Pendiente' ? primaryColor : visit.status === 'Confirmado' ?
+                              successColor : dangerColor,
+                            // borderColor: 'transparent',
+                            // classNames: ['font-weight-bold'],
+                          });
+                        });
+                      </script>
+                    @endpush
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
