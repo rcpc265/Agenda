@@ -19,11 +19,13 @@ class VisitController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('subject');
+        $search = $request->input('visitor');
 
         $visits = Visit::query()
             ->when($search, function ($query, $search) {
-                return $query->where('subject', 'like', "%$search%");
+                return $query->whereHas('visitor', function ($query) use ($search) {
+                    $query->where('name', 'like', "%$search%");
+                });
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10);

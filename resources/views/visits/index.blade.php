@@ -21,7 +21,7 @@
           <form class="form-inline pr-5" action="{{ route('visits.index') }}">
             <div x-data="{ isActive: false }" class="input-group-append">
               <input x-cloak @input="isActive = true" @blur="isActive = false" :class="['form-control mr-2 pr-5']"
-                type="text" style="height: 30px !important; padding-right: 100px !important;" name="subject">
+                type="text" style="height: 30px !important; padding-right: 100px !important;" name="visitor">
               <button x-cloak :class="{ 'py-0': true, 'btn': true, 'btn-outline-primary': true, 'active': isActive }"
                 type="submit">Buscar</button>
             </div>
