@@ -53,28 +53,10 @@
             <strong>{{ $message }}</strong>
           </div>
         @enderror
-        {{-- <div class="form-group">
-          <label class="form-label" for="modal_start_date">Fecha inicial:</label> --}}
         <input id="start_date" type="datetime-local" name="start_date" class="form-control"
           value="{{ old('start_date') }}" hidden>
-        {{-- @error('start_date')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror --}}
-        {{-- </div> --}}
-        {{-- <div class="form-group">
-          <label class="form-label" for="modal_end_date">Fecha final:</label> --}}
         <input id="end_date" type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date') }}"
           hidden>
-        {{-- @error('end_date')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-              <i class="fas fa-exclamation-circle mr-1"></i>
-              <strong>{{ $message }}</strong>
-            </div>
-          @enderror
-        </div> --}}
         <div class="form-group">
           <label class="form-label mb--1">
             Seleccionar horario:
@@ -433,4 +415,4 @@
 @endpush
 
 <!-- Error handling script -->
-{{-- @include('includes.form.error') --}}
+@include('includes.form.error')

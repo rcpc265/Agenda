@@ -53,8 +53,10 @@ class VisitController extends Controller
 
     public function edit(Visit $visit)
     {
+        $visitors = Visitor::orderBy('name')->get();
+        $entities = Visitor::$entities;
         $statuses = Visit::$statuses;
-        return view('visits.edit', compact('visit', 'statuses'));
+        return view('visits.edit', compact('visit', 'statuses', 'visitors'));
     }
 
     public function update(StoreVisitRequest $request, Visit $visit)
