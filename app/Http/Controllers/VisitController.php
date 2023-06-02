@@ -40,6 +40,13 @@ class VisitController extends Controller
         return view('visits.create')->with(compact('visitors', 'entities'));
     }
 
+    public function pdf()
+    {
+        return view('visits.pdf');
+    }
+
+    
+
     public function store(StoreVisitRequest $request)
     {
         $visit = Visit::create($request->validated());

@@ -28,7 +28,11 @@
           </form>
         </div>
         <div class="col text-right">
+
+          
+
           <a href="{{ route('visits.create') }}" class="btn btn-sm btn-primary">Nueva visita</a>
+        
         </div>
       </div>
     </div>
