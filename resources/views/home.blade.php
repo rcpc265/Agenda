@@ -26,7 +26,7 @@
                             }
                           },
                           slotMinTime: '08:30:00',
-                          slotMaxTime: '13:30:00',
+                          slotMaxTime: '12:30:00',
                           slotDuration: '00:15:00',
                           slotLabelInterval: '00:30:00',
                           slotLabelFormat: {

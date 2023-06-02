@@ -17,6 +17,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Ruta de las visitas
     Route::patch('visits/status', [VisitController::class, 'updateStatus'])->name('visits.status');
     Route::resource('visits', VisitController::class);
+    // Ruta para obtener las visitas
+    Route::post('visits/get', [VisitController::class, 'getVisits'])->name('visits.get');
 
     // Ruta de las secretarias
     Route::resource('secretaries', SecretaryController::class);

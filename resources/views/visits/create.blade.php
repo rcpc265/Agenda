@@ -48,15 +48,175 @@
           </div>
         </div>
         @error('visitor_id')
-          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert" role="alert">
+          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert mb-3" role="alert">
             <i class="fas fa-exclamation-circle mr-1"></i>
             <strong>{{ $message }}</strong>
           </div>
         @enderror
-        <input id="start_date" type="datetime-local" name="start_date" class="form-control"
-          value="{{ old('start_date') }}" hidden>
-        <input id="end_date" type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date') }}"
+        <input id="date" name="date" class="form-control" value="{{ old('date') }}" hidden>
+        <input id="start_hour" type="text" name="start_hour" class="form-control" value="{{ old('start_hour') }}"
           hidden>
+        @push('script')
+          <script>
+            $(document).ready(function() {
+              // Format the date to be displayed
+              function formatDate(dateStr) {
+                const date = moment(dateStr, 'DD/MM/YYYY').locale('es');
+                const formattedDate = date.format('dddd, D [de] MMMM [de] YYYY');
+                const today = moment().locale('es');
+                const tomorrow = moment().add(1, 'day').locale('es');
+                const dayAfterTomorrow = moment().add(2, 'day').locale('es');
+                if (date.isSame(today, 'day')) {
+                  return `Hoy, ${formattedDate}`;
+                } else if (date.isSame(tomorrow, 'day')) {
+                  return `Mañana, ${formattedDate}`;
+                } else if (date.isSame(dayAfterTomorrow, 'day')) {
+                  return `Pasado mañana, ${formattedDate}`;
+                } else {
+                  // Capitalize first letter
+                  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+                }
+              }
+
+              // Get selected range
+              function getSelectedHour() {
+                const activeButton = $('.button-radio .btn.active');
+                const buttonText = activeButton.text();
+                const hourStr = buttonText.split(/\s-\s/)[0];
+                return !hourStr ? null : hourStr;
+              }
+
+              // Get selected date
+              function getSelectedDate() {
+                const selectedDate = $('#datepicker-btn').datepicker('getFormattedDate');
+                return selectedDate;
+              }
+
+              // Translate into spanish
+              $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+                  "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                ],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                today: "Hoy",
+                clear: "Limpiar",
+                format: "dd/mm/yyyy",
+                titleFormat: "MM yyyy",
+                /* Leverages same syntax as 'format' */
+                weekStart: 0
+              };
+
+              // Initialize datepicker
+              $('#datepicker-btn').datepicker({
+                language: 'es',
+                format: 'dd/mm/yyyy',
+                startDate: new Date(),
+                todayBtn: 'linked',
+                todayHighlight: true,
+                toggleActive: true,
+                autoclose: true,
+              });
+              // Get the  visits that are in the database and share the same date
+              function getVisits(selectedDate) {
+                $.ajax({
+                  url: '{{ route('visits.get') }}',
+                  type: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                  },
+                  data: JSON.stringify({
+                    date: selectedDate
+                  }),
+
+                  success: function(response) {
+                    // Get the hours that are already taken
+                    const visits = response.visits.map(visit => {
+                      // Turn the date into a moment object
+                      const date = moment(visit.start_date).format('DD/MM/YYYY HH:mm');
+                      // Return the hour and the subject
+                      return {
+                        date: moment(date, 'DD/MM/YYYY HH:mm').format('HH:mm'),
+                        subject: visit.subject,
+                      };
+                    });
+
+                    // Enable all buttons
+                    $('.button-radio button').prop('disabled', false);
+                    // Remove any previous title
+                    $('.button-radio button').removeAttr('title');
+
+                    visits.forEach(visit => {
+                      // Disable all buttons that start with the hour text and set the title attribute to the subject
+                      $(`.button-radio button[value^="${visit.date}"]`)
+                        .prop('disabled', true)
+                        .attr('title', `Asunto: ${visit
+                        .subject}`);
+                    });
+                  }
+                });
+              }
+
+              // Update button text when date changes
+              $('#datepicker-btn').on('changeDate', function() {
+                const isSelected = $(this).datepicker('getDate');
+                if (isSelected !== null) {
+                  const selectedDate = getSelectedDate();
+                  getVisits(selectedDate);
+
+                  const formattedDate = formatDate(selectedDate);
+                  $('#datepicker-btn').html(
+                    `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;${formattedDate}`
+                  );
+                  $('#date').val(selectedDate);
+                } else {
+                  $('#datepicker-btn').html(
+                    `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha`
+                  );
+                  return
+                }
+              });
+
+              // Turn everything that has the class "button-radio" into an advanced button radio group
+              $('.button-radio button').click(function() {
+                if (!$(this).is(':disabled') && !$(this).hasClass('active')) {
+                  // The button is selected
+                  $(this).parent().find('.active').removeClass('active');
+                  $(this).addClass('active');
+
+                  $('#start_hour').val(moment(getSelectedHour(), 'HH:mm').format('HH:mm'));
+                } else if ($(this).hasClass('active')) {
+                  $(this).removeClass('active');
+                }
+              });
+
+              // Restore previous date
+              let oldDate = "{{ old('date') }}";
+              if (oldDate) {
+                // convert the date to a valid JS Date object
+                const date = moment(oldDate, 'DD/MM/YYYY').toDate();
+                // set the datepicker to the new date
+                $('#datepicker-btn').datepicker('setDate', oldDate);
+              } else {
+                // Set the datepicker to today
+                $('#datepicker-btn').datepicker('setDate', new Date());
+                // Trigger the changeDate event
+                $('#datepicker-btn').trigger('changeDate');
+              }
+
+              // Restore previous hour
+              let oldStartHour = "{{ old('start_hour') }}";
+              if (oldStartHour) {
+                const startHour = moment(oldStartHour, 'HH:mm').format('HH:mm');
+                const button = $(`.button-radio button:contains(${startHour})`);
+                button.trigger('click');
+              }
+            });
+          </script>
+        @endpush
         <div class="form-group">
           <label class="form-label mb--1">
             Seleccionar horario:
@@ -65,32 +225,34 @@
             </span>
           </label>
           <div class="button-radio d-flex justify-content-between flex-wrap flex-column flex-sm-row mr--2">
-            <button type="button"
+            <button type="button" value="09:00 - 10:00"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">09:00
+              - 10:00</button>
+            <button type="button" value="10:00 - 11:00"
               class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">10:00
-              -
-              11:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3"
-              disabled>11:00 - 12:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">12:00
-              -
-              13:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">13:00
-              -
-              14:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">14:00
-              -
-              15:00</button>
+              - 11:00</button>
+            <button type="button" value="11:00 - 12:00"
+              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">11:00
+              - 12:00</button>
           </div>
+          @if ($errors->has('start_hour') || $errors->has('date'))
+            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+              @error('date')
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <strong>{{ $message }}</strong><br>
+              @enderror
+              @error('start_hour')
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <strong>{{ $message }}</strong>
+              @enderror
+            </div>
+          @endif
         </div>
 
         <div class="d-none">
           <input value="{{ auth()->user()->id }}" name="user_id">
         </div>
-        <button type="submit" class="btn btn-sm btn-primary">Crear visita</button>
+        <button type="submit" class="btn btn-md btn-primary">Crear visita</button>
       </form>
     </div>
   </div>
@@ -187,7 +349,6 @@
 
 @push('script')
   <script>
-    console.clear();
     // Get all the form-control selectors
     const formControls = document.querySelectorAll('select.form-control');
     const visitor_choices = new Choices('#visitor_id');
@@ -282,135 +443,6 @@
 
     // Execute at least once
     $('#entity').trigger('change');
-  </script>
-@endpush
-
-@push('script')
-  <script>
-    $(document).ready(function() {
-      // Give the date a more verbose format
-      function formatDate(dateStr) {
-        const date = moment(dateStr, 'DD/MM/YYYY').locale('es');
-        const formattedDate = date.format('dddd, D [de] MMMM [de] YYYY');
-        return formattedDate;
-      }
-
-      // Get selected range
-      function getSelectedHour() {
-        const activeButton = $('.button-radio .btn.active');
-        const buttonText = activeButton.text();
-        const hourStr = buttonText.split(/\s-\s/)[0];
-        return !hourStr ? null : hourStr;
-      }
-
-      // Get selected date
-      function getSelectedDate() {
-        const selectedDate = $('#datepicker-btn').datepicker('getFormattedDate');
-        return selectedDate;
-      }
-
-      // Get full date
-      function getFullDate() {
-        const selectedDate = getSelectedDate();
-        const selectedHour = getSelectedHour();
-        if (!selectedHour || !selectedDate) {
-          return null;
-        }
-        const fullDate = moment(`${selectedDate} ${selectedHour}`, 'DD/MM/YYYY HH:mm');
-        // Return a valid string that can be saved inside a date input
-        return fullDate;
-      }
-
-      // Fill form start date and end date
-      function fillFormDates() {
-        const fullDate = getFullDate();
-        if (!fullDate) {
-          return
-        }
-        $('#start_date').val(fullDate.format('YYYY-MM-DD HH:mm'));
-        // The end date must be an hour after the full date
-        $('#end_date').val(moment(fullDate).add(1, 'hour').format('YYYY-MM-DD HH:mm'));
-        console.log($('#start_date').val());
-        console.log($('#end_date').val());
-      }
-
-      // Translate into spanish
-      $.fn.datepicker.dates['es'] = {
-        days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"],
-        daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
-        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
-          "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        ],
-        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-        today: "Hoy",
-        clear: "Limpiar",
-        format: "dd/mm/yyyy",
-        titleFormat: "MM yyyy",
-        /* Leverages same syntax as 'format' */
-        weekStart: 0
-      };
-
-      // Initialize datepicker
-      $('#datepicker-btn').datepicker({
-        language: 'es',
-        format: 'dd/mm/yyyy',
-        startDate: new Date(),
-        todayBtn: 'linked',
-        todayHighlight: true,
-        toggleActive: true,
-      });
-
-      // Update button text when date changes
-      $('#datepicker-btn').on('changeDate', function() {
-        const isSelected = $(this).datepicker('getDate');
-        if (isSelected !== null) {
-          const selectedDate = getSelectedDate();
-          const formattedDate = formatDate(selectedDate);
-          $('#datepicker-btn').html(
-            `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;${formattedDate}`
-          );
-
-          fillFormDates();
-        } else {
-          $('#datepicker-btn').html(
-            `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha`
-          );
-          return
-        }
-      });
-
-      // Turn everything that has the class "button-radio" into an advanced button radio group
-      $('.button-radio button').click(function() {
-        if (!$(this).is(':disabled') && !$(this).hasClass('active')) {
-          // The button is selected
-          $(this).parent().find('.active').removeClass('active');
-          $(this).addClass('active');
-
-          fillFormDates();
-        } else if ($(this).hasClass('active')) {
-          $(this).removeClass('active');
-        }
-      });
-
-
-      // Restore previous date
-      let oldStartDate = "{{ old('start_date') }}";
-      if (oldStartDate) {
-        console.log(oldStartDate)
-        // oldStartDate = moment(oldStartDate, 'DD/MM/YYYY HH:mm');
-        // turn old start date into a date object
-        oldStartDate = new Date(oldStartDate);
-        console.log(oldStartDate)
-        $('#datepicker-btn').datepicker('setDate', oldStartDate);
-        $('#datepicker-btn').trigger('changeDate');
-        // get the hour from the oldStartDate
-        // const startHour = oldStartDate.format('HH:mm');
-        // console.log(startHour)
-        // // click the button group that starts with the startHour
-        // $(`.button-radio .btn:contains("${startHour}")`).click();
-      }
-    });
   </script>
 @endpush
 

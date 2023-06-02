@@ -5,7 +5,7 @@
     <div class="card-header border-1">
       <div class="row align-items-center">
         <div class="col">
-          <h2 class="mb-0">Editar visita</h2>
+          <h2 class="mb-0">Nueva visita</h2>
         </div>
         <div class="col text-right">
           <a href="{{ route('visits.index') }}" class="btn btn-sm btn-success">
@@ -14,16 +14,6 @@
         </div>
       </div>
     </div>
-
-    {{-- @if ($errors->any())
-      <div class="alert alert-danger" role="alert">
-        <ul class="mb-0">
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif --}}
 
     <div class="card-body">
       <form action="{{ route('visits.store') }}" method="POST">
@@ -94,6 +84,22 @@
               class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">14:00
               -
               15:00</button>
+          </div>
+          <div class="form-group mt-3">
+            <label class="form-label" for="status">Seleccionar estado:</label>
+            <select class="form-control" name="status" title="Seleccionar estado">
+              @foreach ($statuses as $status)
+                <option value="{{ $status }}" {{ old('status', $visit->status) === $status ? 'selected' : '' }}>
+                  {{ $status }}
+                </option>
+              @endforeach
+            </select>
+            @error('status')
+              <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <strong>{{ $message }}</strong>
+              </div>
+            @enderror
           </div>
         </div>
 
