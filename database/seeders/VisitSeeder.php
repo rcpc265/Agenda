@@ -12,7 +12,6 @@ class VisitSeeder extends Seeder
         ['start' => '9', 'end' => '10'],
         ['start' => '10', 'end' => '11'],
         ['start' => '11', 'end' => '12'],
-        ['start' => '12', 'end' => '13'],
     ];
 
     public function run(): void
