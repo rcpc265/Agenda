@@ -9,9 +9,29 @@ use Illuminate\Database\Seeder;
 class VisitSeeder extends Seeder
 {
     private static $defaultRanges = [
-        ['start' => '9', 'end' => '10'],
-        ['start' => '10', 'end' => '11'],
-        ['start' => '11', 'end' => '12'],
+        Carbon::MONDAY => [
+            ['start' => '9', 'end' => '10'],
+            ['start' => '10', 'end' => '11'],
+            ['start' => '11', 'end' => '12'],
+        ],
+        Carbon::TUESDAY => [
+            ['start' => '9', 'end' => '10'],
+            ['start' => '10', 'end' => '11'],
+            ['start' => '11', 'end' => '12'],
+        ],
+        Carbon::WEDNESDAY => [
+            ['start' => '14', 'end' => '15'],
+            ['start' => '15', 'end' => '16'],
+        ],
+        Carbon::THURSDAY => [
+            ['start' => '14', 'end' => '15'],
+            ['start' => '15', 'end' => '16'],
+        ],
+        Carbon::FRIDAY => [
+            ['start' => '9', 'end' => '10'],
+            ['start' => '10', 'end' => '11'],
+            ['start' => '11', 'end' => '12'],
+        ],
     ];
 
     public function run(): void
@@ -21,89 +41,70 @@ class VisitSeeder extends Seeder
     }
 
     /**
-     * Generate a random amount of visits for a specified number of days
-     *
-     * @param int $numVisits The number of days to generate visits for.
+     * Generate a random amount of visits for each day of the week.
+     * @param int $numVisits The number of visits to generate per day.
      * @return array An array of generated visits.
      */
     public function generateVisitsPerDay(int $numVisits): array
     {
         $visits = [];
-        // $date = Carbon::now();
-        // Rest 1 month to the current date
+        // Start from a month ago
         $date = Carbon::now()->subMonth();
         for ($i = 0; $i < $numVisits; $i++) {
-            $visits[] = $this->generateVisits($date);
+            // Skip weekends and move to Monday
+            if ($date->isWeekend()) {
+                $date->next(Carbon::MONDAY);
+            }
+
+            $visits = array_merge($visits, $this->generateVisits($date));
             $date->addDay();
         }
 
         return $visits;
     }
 
-
     /**
-     * Generate a random amount of visits for a specified date, if no date is specified, the current date is used.
-     *
-     * @param int $numVisits The number of days to generate visits for.
-     * @return array An array of generated visits.
-     */
-    public function generateVisits(Carbon $date = null): array
+    * Generate a random amount of visits for a given date.
+    * @param Carbon $date The date to generate visits for.
+    * @return array An array of generated visits.
+    */
+    public function generateVisits(Carbon $date): array
     {
-        if (is_null($date)) {
-            $date = Carbon::now();
-        }
-
-        // Generate a random amount of time ranges
-        $timeRanges = $this->timeRangeGenerator($date, rand(1, sizeof(self::$defaultRanges)));
-
-        $visits = [];
-        // Create visits with different time ranges
-        foreach ($timeRanges as $timeRange) {
-            $visits[] = Visit::factory()->create([
-                'start_date' => $timeRange['start'],
-                'end_date' => $timeRange['end'],
-            ]);
-        }
-
-        return $visits;
-    }
-
-    /**
-     * Generate a random amount of time ranges for a specified date, if no date is specified, the current date is used.
-     *
-     * @param Carbon $date The date to generate time ranges for.
-     * @param int $numVisits The number of time ranges to generate.
-     * @return array An array of generated time ranges.
-     */
-    public function timeRangeGenerator(Carbon $date, int $numVisits): array
-    {
+        $todayRange = self::$defaultRanges[$date->dayOfWeek];
         $timeRanges = [];
-        $size = sizeof($timeRanges);
-        while ($size != $numVisits) {
-            // Pick a random time range
-            $range = self::$defaultRanges[rand(0, sizeof(self::$defaultRanges) - 1)];
-            $timeRange = [
-                'start' => $date->copy()->setTime($range['start'], '0', '0'),
-                'end' => $date->copy()->setTime($range['end'], '0', '0')
-            ];
 
-            $overlap = false;
-            foreach ($timeRanges as $previousTimeRange) {
-                // Check if the range is the same as the previous one
-                if ($timeRange['start'] == $previousTimeRange['start']) {
-                    $overlap = true;
+        // Generate a random amount of time ranges for the given day
+        $amount = mt_rand(1, count($todayRange));
+        while (count($timeRanges) < $amount) {
+            $randomIndex = array_rand($todayRange);
+            $selectedTimeRange = $todayRange[$randomIndex];
+            $isDuplicate = false;
+
+            // Check if the time range is already in the array
+            foreach ($timeRanges as $time) {
+                if ($time['start'] === $selectedTimeRange['start']) {
+                    $isDuplicate = true;
                     break;
                 }
             }
 
-            // Add time range if it doesn't overlap with any other time range
-            if (!$overlap) {
-                $timeRanges[] = $timeRange;
+            // If the time range is not a duplicate, add it to the array
+            if (!$isDuplicate) {
+                $timeRanges[] = [
+                    'start' => $selectedTimeRange['start'],
+                    'end' => $selectedTimeRange['end'],
+                ];
             }
-
-            // Update size
-            $size = sizeof($timeRanges);
         }
-        return $timeRanges;
+
+        $visits = [];
+        foreach ($timeRanges as $timeRange) {
+            $visits[] = Visit::factory()->create([
+                'start_date' => $date->setTime($timeRange['start'], 0, 0),
+                'end_date' => $date->setTime($timeRange['end'], 0, 0),
+            ]);
+        }
+
+        return $visits;
     }
 }

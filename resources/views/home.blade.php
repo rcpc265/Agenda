@@ -25,10 +25,13 @@
                               allDayText: false,
                             }
                           },
-                          slotMinTime: '08:30:00',
-                          slotMaxTime: '12:30:00',
+                          // Hide saturday and sunday
+                          hiddenDays: [6, 0],
+                          slotMinTime: '10:00:00',
+                          slotMaxTime: '17:00:00',
                           slotDuration: '00:15:00',
-                          slotLabelInterval: '00:30:00',
+                          slotLabelInterval: '01:00:00',
+                          //   slotLabelInterval: '00:30:00',
                           slotLabelFormat: {
                             hour: 'numeric',
                             minute: '2-digit',
