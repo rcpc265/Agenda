@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Visit;
+use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -10,27 +11,27 @@ class VisitSeeder extends Seeder
 {
     private static $defaultRanges = [
         Carbon::MONDAY => [
-            ['start' => '9', 'end' => '10'],
-            ['start' => '10', 'end' => '11'],
-            ['start' => '11', 'end' => '12'],
+            ['type' => 'Persona jurídica', 'start' => '9', 'end' => '10'],
+            ['type' => 'Persona jurídica', 'start' => '10', 'end' => '11'],
+            ['type' => 'Persona jurídica', 'start' => '11', 'end' => '12'],
         ],
         Carbon::TUESDAY => [
-            ['start' => '9', 'end' => '10'],
-            ['start' => '10', 'end' => '11'],
-            ['start' => '11', 'end' => '12'],
+            ['type' => 'Persona natural', 'start' => '9', 'end' => '10'],
+            ['type' => 'Persona natural', 'start' => '10', 'end' => '11'],
+            ['type' => 'Persona natural', 'start' => '11', 'end' => '12'],
         ],
         Carbon::WEDNESDAY => [
-            ['start' => '14', 'end' => '15'],
-            ['start' => '15', 'end' => '16'],
+            ['type' => 'Persona jurídica', 'start' => '14', 'end' => '15'],
+            ['type' => 'Persona jurídica', 'start' => '15', 'end' => '16'],
         ],
         Carbon::THURSDAY => [
-            ['start' => '14', 'end' => '15'],
-            ['start' => '15', 'end' => '16'],
+            ['type' => 'Persona natural', 'start' => '14', 'end' => '15'],
+            ['type' => 'Persona natural', 'start' => '15', 'end' => '16'],
         ],
         Carbon::FRIDAY => [
-            ['start' => '9', 'end' => '10'],
-            ['start' => '10', 'end' => '11'],
-            ['start' => '11', 'end' => '12'],
+            ['type' => 'Persona jurídica', 'start' => '9', 'end' => '10'],
+            ['type' => 'Persona jurídica', 'start' => '10', 'end' => '11'],
+            ['type' => 'Persona jurídica', 'start' => '11', 'end' => '12'],
         ],
     ];
 
@@ -64,10 +65,10 @@ class VisitSeeder extends Seeder
     }
 
     /**
-    * Generate a random amount of visits for a given date.
-    * @param Carbon $date The date to generate visits for.
-    * @return array An array of generated visits.
-    */
+     * Generate a random amount of visits for a given date.
+     * @param Carbon $date The date to generate visits for.
+     * @return array An array of generated visits.
+     */
     public function generateVisits(Carbon $date): array
     {
         $todayRange = self::$defaultRanges[$date->dayOfWeek];
@@ -93,15 +94,30 @@ class VisitSeeder extends Seeder
                 $timeRanges[] = [
                     'start' => $selectedTimeRange['start'],
                     'end' => $selectedTimeRange['end'],
+                    'type' => $selectedTimeRange['type'],
                 ];
             }
         }
 
+        $legalVisitors = Visitor::query()
+            ->where('entity', 'Persona jurídica')
+            ->pluck('id')
+            ->all();
+
+        $naturalVisitors = Visitor::query()
+            ->where('entity', 'Persona natural')
+            ->pluck('id')
+            ->all();
+
         $visits = [];
+
         foreach ($timeRanges as $timeRange) {
             $visits[] = Visit::factory()->create([
                 'start_date' => $date->setTime($timeRange['start'], 0, 0),
                 'end_date' => $date->setTime($timeRange['end'], 0, 0),
+                'visitor_id' => $timeRange['type'] === 'Persona jurídica'
+                    ? $legalVisitors[array_rand($legalVisitors)]
+                    : $naturalVisitors[array_rand($naturalVisitors)],
             ]);
         }
 
