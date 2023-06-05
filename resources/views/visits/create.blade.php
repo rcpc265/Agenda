@@ -28,37 +28,26 @@
             </div>
           @enderror
         </div>
-        <label class="form-label" for="modal_visitor_id">Visitante:</label>
-        <div class="form-group row">
-          <div class="col pr-0">
-            <select id="visitor_id" name="visitor_id" class="form-control">
-              <option value="" disabled selected>Seleccione un visitante</option>
-              @foreach ($visitors as $visitor)
-                <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
-                  {{ $visitor->name }}
-                </option>
-              @endforeach
-            </select>
-          </div>
-          <div class="col-auto">
-            <button type="button" class="btn btn-success form-control" modal-launcher data-toggle="modal"
-              data-target="#add-new-visitor" id="modal-launcher">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-        </div>
-        @error('visitor_id')
-          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert mb-3" role="alert">
-            <i class="fas fa-exclamation-circle mr-1"></i>
-            <strong>{{ $message }}</strong>
-          </div>
-        @enderror
-        <input id="date" name="date" class="form-control" value="{{ old('date') }}" hidden>
-        <input id="start_hour" type="text" name="start_hour" class="form-control" value="{{ old('start_hour') }}"
-          hidden>
         @push('script')
           <script>
             $(document).ready(function() {
+              function getPersonType(selectedDate) {
+                const defaultRanges = {
+                  'lunes': 'Persona jurídica',
+                  'martes': 'Persona natural',
+                  'miércoles': 'Persona jurídica',
+                  'jueves': 'Persona natural',
+                  'viernes': 'Persona jurídica',
+                };
+
+                const date = moment(selectedDate, 'DD/MM/YYYY HH:mm');
+                // get the day of the week in a verbose format
+                const weekday = date.format('dddd');
+                console.log("Dia de la semana");
+                console.log(weekday);
+                return defaultRanges[weekday];
+              }
+
               // Format the date to be displayed
               function formatDate(dateStr) {
                 const date = moment(dateStr, 'DD/MM/YYYY').locale('es');
@@ -102,7 +91,6 @@
                 ],
                 monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                 today: "Hoy",
-                clear: "Limpiar",
                 format: "dd/mm/yyyy",
                 titleFormat: "MM yyyy",
                 /* Leverages same syntax as 'format' */
@@ -117,8 +105,9 @@
                 todayBtn: 'linked',
                 todayHighlight: true,
                 toggleActive: true,
-                autoclose: true,
+                daysOfWeekDisabled: [0, 6],
               });
+
               // Get the  visits that are in the database and share the same date
               function getVisits(selectedDate) {
                 $.ajax({
@@ -166,6 +155,10 @@
                 if (isSelected !== null) {
                   const selectedDate = getSelectedDate();
                   getVisits(selectedDate);
+                  const selectedPersonType = getPersonType(selectedDate);
+                  console.log(selectedPersonType); // Output: 'persona jurídica'
+                  $('#modal_entity').val(selectedPersonType);
+                  $('#modal_entity').trigger('change');
 
                   const formattedDate = formatDate(selectedDate);
                   $('#datepicker-btn').html(
@@ -200,8 +193,9 @@
                 const date = moment(oldDate, 'DD/MM/YYYY').toDate();
                 // set the datepicker to the new date
                 $('#datepicker-btn').datepicker('setDate', oldDate);
-              } else {
-                // Set the datepicker to today
+
+                // Set the datepicker to today if today is not sunday or saturday
+              } else if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
                 $('#datepicker-btn').datepicker('setDate', new Date());
                 // Trigger the changeDate event
                 $('#datepicker-btn').trigger('changeDate');
@@ -248,6 +242,34 @@
             </div>
           @endif
         </div>
+        <label class="form-label" for="modal_visitor_id">Visitante:</label>
+        <div class="form-group row">
+          <div class="col pr-0">
+            <select id="visitor_id" name="visitor_id" class="form-control">
+              <option value="" disabled selected>Seleccione un visitante</option>
+              @foreach ($visitors as $visitor)
+                <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
+                  {{ $visitor->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-success form-control" modal-launcher data-toggle="modal"
+              data-target="#add-new-visitor" id="modal-launcher">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        @error('visitor_id')
+          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert mb-3" role="alert">
+            <i class="fas fa-exclamation-circle mr-1"></i>
+            <strong>{{ $message }}</strong>
+          </div>
+        @enderror
+        <input id="date" name="date" class="form-control" value="{{ old('date') }}" hidden>
+        <input id="start_hour" type="text" name="start_hour" class="form-control" value="{{ old('start_hour') }}"
+          hidden>
 
         <div class="d-none">
           <input value="{{ auth()->user()->id }}" name="user_id">
@@ -304,7 +326,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="modal_dni_display">
               <label class="form-label" for="modal_dni">DNI:</label>
               <input type="text" id="modal_dni" name="modal_dni" class="form-control">
               <div class="d-none" id="modal_error_dni">
@@ -366,11 +388,6 @@
 
     $("#cancel-btn").click(function(event) {
       $('#modal_form').trigger('reset');
-      // Select personas naturales by default
-      $('#modal_entity').val('Persona natural');
-      $('#modal_ruc_display').addClass('d-none');
-      $('#modal_ruc_display input').prop('disabled', true);
-
       // Hide all the error boxes
       for (const field in fieldErrors) {
         fieldErrors[field].box.addClass('d-none');
@@ -430,19 +447,25 @@
 
 @push('script')
   <script>
-    // Show or hide RUC input
-    $('#modal_entity').on('change', function() {
-      if (this.value === 'Persona jurídica') {
-        $('#modal_ruc_display').removeClass('d-none');
-        $('#modal_ruc_display input').prop('disabled', false);
-      } else {
-        $('#modal_ruc_display').addClass('d-none');
-        $('#modal_ruc_display input').prop('disabled', true);
-      }
-    });
+    $(document).ready(function() {
+      // Show or hide RUC input
+      $('#modal_entity').on('change', function() {
+        if (this.value === 'Persona jurídica') {
+          $('#modal_ruc_display').removeClass('d-none');
+          $('#modal_ruc_display input').prop('disabled', false);
+          $('#modal_dni_display').addClass('d-none');
+          $('#modal_dni_display input').prop('disabled', true);
+        } else {
+          $('#modal_ruc_display').addClass('d-none');
+          $('#modal_ruc_display input').prop('disabled', true);
+          $('#modal_dni_display').removeClass('d-none');
+          $('#modal_dni_display input').prop('disabled', false);
+        }
+      });
 
-    // Execute at least once
-    $('#entity').trigger('change');
+      // Execute at least once
+      $('#entity').trigger('change');
+    })
   </script>
 @endpush
 

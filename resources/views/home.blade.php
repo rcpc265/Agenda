@@ -29,7 +29,7 @@
                           hiddenDays: [6, 0],
                           slotMinTime: '10:00:00',
                           slotMaxTime: '17:00:00',
-                          slotDuration: '00:15:00',
+                          slotDuration: '00:20:00',
                           slotLabelInterval: '01:00:00',
                           //   slotLabelInterval: '00:30:00',
                           slotLabelFormat: {
