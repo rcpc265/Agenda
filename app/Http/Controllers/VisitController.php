@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class VisitController extends Controller
 {
@@ -41,17 +42,28 @@ class VisitController extends Controller
 
     public function create()
     {
-        $visitors = Visitor::orderBy('name')->get();
+        $legalVisitors = Visitor::where('entity', 'Persona Jurídica')->orderBy('name')->get();
+        $naturalVisitors = Visitor::where('entity', 'Persona Natural')->orderBy('name')->get();
+        // $legalVisitorsNames = [];
+        // foreach ($legalVisitors as $legalVisitor) {
+        //     $legalVisitorsNames[] = $legalVisitor->name;
+        // }
+        // $naturalVisitorsNames = [];
+        // foreach ($naturalVisitors as $naturalVisitor) {
+        //     $naturalVisitorsNames[] = $naturalVisitor->name;
+        // }
+        // dd ($legalVisitorsNames, 'visitantes naturales', $naturalVisitorsNames);
         $entities = Visitor::$entities;
-        return view('visits.create')->with(compact('visitors', 'entities'));
+        return view('visits.create')->with(compact('legalVisitors', 'naturalVisitors', 'entities'));
     }
 
     public function pdf()
     {
-        return view('visits.pdf');
+        $pdf = Pdf::loadView('visits.pdf');
+        return $pdf->download('reporte.pdf');
     }
 
-    
+
 
     public function store(StoreVisitRequest $request)
     {

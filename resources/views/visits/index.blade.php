@@ -2,11 +2,16 @@
 @section('title', 'Mostar visitas')
 @section('content')
   @if (session('status'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show"
+      role="alert">
       <span class="alert-icon"><i class="fas fa-check-circle"></i></span>
       <span class="font-weight-bold">{{ session('status') }}</strong>
-        <button type="button my-auto" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true" class="pt-1 mt-4 pt-md-0 mt-md-1">&times;</span>
+        <button class="close"
+          data-dismiss="alert"
+          type="button my-auto"
+          aria-label="Close">
+          <span class="pt-1 mt-4 pt-md-0 mt-md-1"
+            aria-hidden="true">&times;</span>
         </button>
     </div>
   @endif
@@ -18,27 +23,39 @@
           </h2>
         </div>
         <div class="col-9">
-          <form class="form-inline pr-5" action="{{ route('visits.index') }}">
-            <div x-data="{ isActive: false }" class="input-group-append">
-              <input x-cloak @input="isActive = true" @blur="isActive = false" :class="['form-control mr-2 pr-5']"
-                type="text" style="height: 30px !important; padding-right: 100px !important;" name="visitor" placeholder="Nombre del visitante">
-              <button x-cloak :class="{ 'py-0': true, 'btn': true, 'btn-outline-primary': true, 'active': isActive }"
-                type="submit">Buscar</button>
+          <form class="form-inline pr-5"
+            action="{{ route('visits.index') }}">
+            <div class="input-group-append"
+              x-data="{ isActive: false }">
+              <input name="visitor"
+                type="text"
+                style="height: 30px !important; padding-right: 100px !important;"
+                x-cloak
+                @input="isActive = true"
+                @blur="isActive = false"
+                :class="['form-control mr-2 pr-5']"
+                placeholder="Nombre del visitante">
+              <button type="submit"
+                x-cloak
+                :class="{ 'py-0': true, 'btn': true, 'btn-outline-primary': true, 'active': isActive }">Buscar</button>
             </div>
           </form>
         </div>
         <div class="col text-right">
 
-          
+          <a class="btn btn-primary"
+            href="{{ route('visits.pdf') }}">Generate PDF</a>
 
-          <a href="{{ route('visits.create') }}" class="btn btn-sm btn-primary">Nueva visita</a>
-        
+          <a class="btn btn-sm btn-primary"
+            href="{{ route('visits.create') }}">Nueva visita</a>
+
         </div>
       </div>
     </div>
     @if ($visits->isEmpty())
       <div class="card px-4">
-        <div class="alert alert-warning py-1" role="alert">
+        <div class="alert alert-warning py-1"
+          role="alert">
           <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
           <span class="font-weight-bold">No se encontraron resultados</span>
         </div>
@@ -53,7 +70,8 @@
               <th scope="col">Estado</th>
               <th scope="col">Nombre del visitante</th>
               <th scope="col">Fecha</th>
-              <th scope="col" class="text-center">Hora de inicio y<br>Hora final</th>
+              <th class="text-center"
+                scope="col">Hora de inicio y<br>Hora final</th>
               <th scope="col">Opciones</th>
             </tr>
           </thead>
@@ -99,8 +117,10 @@
                       currentIndex: 0,
                       visitId: '{{ $visit->id }}',
                       get status() { return this.badges[this.currentIndex].status; },
-                  }" x-init="currentIndex = badges.findIndex(badge => badge.status === '{{ $visit->status }}');">
-                    <button x-cloak type="button"
+                  }"
+                    x-init="currentIndex = badges.findIndex(badge => badge.status === '{{ $visit->status }}');">
+                    <button type="button"
+                      x-cloak
                       x-on:click="currentIndex = (currentIndex + 1) % badges.length; storeStatus(visitId, status);"
                       :class="['btn', 'btn-sm', 'badge-pill', 'badge', badges[currentIndex].color]">
                       <span x-text="status"></span>
@@ -112,24 +132,36 @@
                 <td class="text-center">{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
                   {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
                 <td>
-                  <a href="{{ route('visits.edit', $visit) }}" class="btn btn-sm btn-primary">Editar</a>
+                  <a class="btn btn-sm btn-primary"
+                    href="{{ route('visits.edit', $visit) }}">Editar</a>
 
                   <!-- Button trigger modal -->
-                  <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                    data-target="#deleteModal{{ $visit->id }}">Eliminar</button>
+                  <button class="btn btn-sm btn-danger"
+                    data-toggle="modal"
+                    data-target="#deleteModal{{ $visit->id }}"
+                    type="button">Eliminar</button>
                 </td>
               </tr>
 
               <!-- Modal -->
-              <div class="modal fade" id="deleteModal{{ $visit->id }}" tabindex="-1" role="dialog"
-                aria-labelledby="deleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal fade"
+                id="deleteModal{{ $visit->id }}"
+                role="dialog"
+                aria-labelledby="deleteModalLabel"
+                aria-hidden="true"
+                tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered"
+                  role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h3 class="modal-title" id="deleteModalLabel">
+                      <h3 class="modal-title"
+                        id="deleteModalLabel">
                         Confirmar acción
                       </h3>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <button class="close"
+                        data-dismiss="modal"
+                        type="button"
+                        aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
@@ -137,11 +169,15 @@
                       ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la visita "{{ $visit->name }}"?
                     </div>
                     <div class="modal-footer pt-3">
-                      <form action="{{ route('visits.destroy', $visit) }}" method="POST">
+                      <form action="{{ route('visits.destroy', $visit) }}"
+                        method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                        <button class="btn btn-secondary"
+                          data-dismiss="modal"
+                          type="button">Cancelar</button>
+                        <button class="btn btn-danger"
+                          type="submit">Confirmar</button>
                       </form>
                     </div>
                   </div>

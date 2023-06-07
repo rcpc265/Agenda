@@ -7,5 +7,6 @@
 </head>
 <body>
     <h1>Hola soy tu reporte</h1>
+    {{-- Lo haces bonito :V --}}
 </body>
 </html>
