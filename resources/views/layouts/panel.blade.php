@@ -51,9 +51,13 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Brand -->
-      {{-- <a class="navbar-brand pt-0" href="./index.html">
-        <img src="{{ asset('img/brand/blue.png') }}" class="navbar-brand-img" alt="...">
-      </a> --}}
+      
+  <a class="navbar-brand pt-1" href="#">
+    <img src="{{ asset('img/brand/logo_visitasMPP.png') }}" alt="..." class="h-auto w-100" style="max-height: 200px; max-width: 180px;">
+  </a>
+
+
+
       <!-- User -->
       <ul class="nav align-items-center d-md-none">
         <li class="nav-item dropdown">
@@ -82,7 +86,7 @@
         </li>
       </ul>
       <!-- Collapse -->
-      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+      <div class="collapse navbar-collapse " id="sidenav-collapse-main">
         <!-- Collapse header -->
         <div class="navbar-collapse-header d-md-none">
           <div class="row">

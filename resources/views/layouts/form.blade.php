@@ -73,7 +73,7 @@
     <div class="header-body text-center mb-6">
         <div class="row justify-content-center">
             <div class="col-lg-7 col-md-20">
-                <img src="http://actividades.munipuno.gob.pe/vendor/adminlte/dist/img/logomuni.png" height="80">
+                <img alt="Logo Muninipio" src="{{ asset('img/theme/LogoMuni.png') }}" height="70">
                 <b style="font-size: 30px; color: black;">Visitas MPP</b>
             </div>
         </div>
