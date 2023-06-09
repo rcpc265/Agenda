@@ -60,7 +60,8 @@ class VisitController extends Controller
     public function pdf()
     {
         $pdf = Pdf::loadView('visits.pdf');
-        return $pdf->download('reporte.pdf');
+        // return $pdf->download('reporte.pdf');
+        return $pdf->stream();
     }
 
 

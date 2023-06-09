@@ -41,16 +41,19 @@
             </div>
           </form>
         </div>
-        <div class="col text-right">
 
-          <a class="btn btn-primary"
-            href="{{ route('visits.pdf') }}">Generate PDF</a>
 
-          <a class="btn btn-sm btn-primary"
-            href="{{ route('visits.create') }}">Nueva visita</a>
+        <div class="col text-right pt-2">
+            <a class="btn btn-sm btn-primary btn-sm " data-placement="left"
+                    href="{{ route('visits.pdf') }}" target="_blank">PDF</a>
+        </div>
+        <div class="col text-left pt-2">
+
+            <a class="btn btn-sm btn-primary btn-sm float-right" data-placement="left"
+                href="{{ route('visits.create') }}">Nueva visita</a>
 
         </div>
-      </div>
+
     </div>
     @if ($visits->isEmpty())
       <div class="card px-4">
