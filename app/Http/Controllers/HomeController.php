@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visit;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HomeController extends Controller
 {
@@ -26,5 +27,11 @@ class HomeController extends Controller
         // Retrieve all visits that are scheduled within the next 6 months, as well as those that occurred within the past 3 months.
         $visits = Visit::where('start_date', '>=', date('Y-m-d', strtotime('-3 months')))->where('start_date', '<=', date('Y-m-d', strtotime('+6 months')))->get(['id', 'subject', 'start_date', 'end_date', 'status']);
         return view('home', compact('visits'));
+    }
+
+    public function generatePDF()
+    {
+        $pdf = Pdf::loadView('visits.pdf');
+        return $pdf->stream();
     }
 }

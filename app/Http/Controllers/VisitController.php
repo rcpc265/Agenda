@@ -57,11 +57,10 @@ class VisitController extends Controller
         return view('visits.create')->with(compact('legalVisitors', 'naturalVisitors', 'entities'));
     }
 
-    public function pdf()
+    public function generatePDF()
     {
-        $pdf = Pdf::loadView('visits.pdf');
-        // return $pdf->download('reporte.pdf');
-        return $pdf->stream();
+        // $pdf = Pdf::loadHTML("Hello world");
+        // return $pdf->stream();
     }
 
 
