@@ -117,7 +117,7 @@ class VisitController extends Controller
     public function destroy(Visit $visit)
     {
         $visit->delete();
-        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue eliminada exitosamente!"]);
+        return redirect()->route('visits.index')->with(['status' => "¡La visita fue eliminada exitosamente!"]);
     }
 
     public function getVisits(Request $request)
