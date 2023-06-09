@@ -31,7 +31,15 @@ class HomeController extends Controller
 
     public function generatePDF()
     {
-        $pdf = Pdf::loadView('visits.pdf');
+        $legalVisits = Visit::join('visitors', 'visits.visitor_id', '=', 'visitors.id')
+            ->where('visitors.entity', 'Persona jurídica')
+            ->get();
+
+        $naturalVisits = Visit::join('visitors', 'visits.visitor_id', '=', 'visitors.id')
+            ->where('visitors.entity', 'Persona natural')
+            ->get();
+
+        $pdf = Pdf::loadView('visits.pdf', compact('legalVisits', 'naturalVisits'))->setPaper('a4', 'landscape');
         return $pdf->stream();
     }
 }

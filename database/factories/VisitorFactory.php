@@ -10,7 +10,6 @@ class VisitorFactory extends Factory
     {
         $visitor = [
             'name' => $this->faker->name,
-            'dni' => $this->faker->unique()->randomNumber(8, true),
             'phone_number' => $this->faker->optional()->phoneNumber,
             'email' => $this->faker->unique()->email(),
             'entity' => $this->faker->randomElement(['Persona natural', 'Persona jurídica']),
@@ -20,6 +19,8 @@ class VisitorFactory extends Factory
         if ($visitor['entity'] == 'Persona jurídica') {
             // A random number of 11 digits
             $visitor['ruc'] = $this->faker->randomNumber(5, true) . $this->faker->randomNumber(6, true);
+        } else {
+            $visitor['dni'] = $this->faker->unique()->randomNumber(8, true);
         }
 
         return $visitor;
