@@ -52,8 +52,8 @@
 <h6 class="navbar-heading text-muted">Reportes</h6>
 <!-- Navigation -->
 <ul class="navbar-nav mb-md-3">
-  <li class="nav-item">
-    <a class="nav-link" href="#">
+  <li class="nav-item {{ is_active('reports') }}">
+    <a class="nav-link {{ is_active('reports') }}" href="#">
       <i class="ni ni-books text-default"></i> Citas
     </a>
   </li>

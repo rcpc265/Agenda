@@ -34,6 +34,7 @@
                 @input="isActive = true"
                 @blur="isActive = false"
                 :class="['form-control mr-2 pr-5']"
+                value="{{ request('visitor') }}"
                 placeholder="Nombre del visitante">
               <button type="submit"
                 x-cloak

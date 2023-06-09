@@ -57,14 +57,6 @@ class VisitController extends Controller
         return view('visits.create')->with(compact('legalVisitors', 'naturalVisitors', 'entities'));
     }
 
-    public function pdf()
-    {
-        $pdf = Pdf::loadView('visits.pdf');
-        return $pdf->download('reporte.pdf');
-    }
-
-
-
     public function store(StoreVisitRequest $request)
     {
         $date = $request->get('date');
@@ -116,7 +108,7 @@ class VisitController extends Controller
     public function destroy(Visit $visit)
     {
         $visit->delete();
-        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue eliminada exitosamente!"]);
+        return redirect()->route('visits.index')->with(['status' => "¡La visita fue eliminada exitosamente!"]);
     }
 
     public function getVisits(Request $request)
