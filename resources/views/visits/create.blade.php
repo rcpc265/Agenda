@@ -399,6 +399,8 @@
               data-toggle="modal"
               data-target="#add-new-visitor"
               type="button"
+              title="Seleccione una fecha primero"
+              disabled
               modal-launcher>
               <i class="fas fa-plus"></i>
             </button>
@@ -502,7 +504,8 @@
               <select class="form-control"
                 id="modal_entity"
                 name="modal_entity"
-                title="Seleccionar entidad">
+                title="Seleccionar entidad"
+                disabled>
                 @foreach ($entities as $entity)
                   <option value="{{ $entity }}"
                     {{ old('entity') === $entity ? 'selected' : '' }}>

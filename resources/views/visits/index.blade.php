@@ -29,12 +29,12 @@
               x-data="{ isActive: false }">
               <input name="visitor"
                 type="text"
+                value="{{ request('visitor') }}"
                 style="height: 30px !important; padding-right: 100px !important;"
                 x-cloak
                 @input="isActive = true"
                 @blur="isActive = false"
                 :class="['form-control mr-2 pr-5']"
-                value="{{ request('visitor') }}"
                 placeholder="Nombre del visitante">
               <button type="submit"
                 x-cloak
@@ -43,17 +43,82 @@
           </form>
         </div>
 
-
         <div class="col text-right pt-2">
-            <a class="btn btn-sm btn-primary btn-sm " data-placement="left"
-                    href="{{ route('visits.pdf') }}" target="_blank">PDF</a>
-        </div>
-        <div class="col text-left pt-2">
+          <button class="btn btn-sm btn-primary "
+            data-toggle="modal"
+            data-target="#generatePDF"
+            data-placement="left"
+            type="button">PDF</button>
 
-            <a class="btn btn-sm btn-primary btn-sm float-right" data-placement="left"
-                href="{{ route('visits.create') }}">Nueva visita</a>
-
+          <a class="btn btn-sm btn-primary btn-sm float-right"
+            data-placement="left"
+            href="{{ route('visits.create') }}">Nueva visita</a>
         </div>
+        <div class="modal fade"
+          id="generatePDF"
+          role="dialog"
+          aria-hidden="true"
+          tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered"
+            role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title text-uppercase"
+                  id="deleteModalLabel">
+                  Seleccionar fecha
+                </h2>
+                <button class="close"
+                  data-dismiss="modal"
+                  type="button"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form action="{{ route('home.pdf') }}"
+                method="GET"
+                target="_blank">
+                <div class="modal-body py-0 my-0">
+                  <div class="input-daterange datepicker row align-items-center">
+                    <div class="col">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                          </div>
+                          <input class="form-control"
+                            name="start_date"
+                            type="text"
+                            placeholder="Fecha inicial">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                          </div>
+                          <input class="form-control"
+                            name="end_date"
+                            type="text"
+                            placeholder="Fecha final">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer mt--4">
+                  <button class="btn btn-dark"
+                    data-dismiss="modal"
+                    type="button">Cancelar</button>
+                  <button class="btn btn-success"
+                    type="submit">Generar</button>
+              </form>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
     </div>
     @if ($visits->isEmpty())
@@ -170,7 +235,7 @@
                       </button>
                     </div>
                     <div class="modal-body py-0 my-0">
-                      ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la visita "{{ $visit->name }}"?
+                      ¿Está seguro(a) que desea <span class="text-dark">eliminar</span> la visita?
                     </div>
                     <div class="modal-footer pt-3">
                       <form action="{{ route('visits.destroy', $visit) }}"

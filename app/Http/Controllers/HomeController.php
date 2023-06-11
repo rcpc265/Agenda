@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Visit;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -29,17 +31,22 @@ class HomeController extends Controller
         return view('home', compact('visits'));
     }
 
-    public function generatePDF()
+    public function generatePDF(Request $request)
     {
+        $startDate = Carbon::parse($request->get('start_date'))->startOfDay();
+        $endDate = Carbon::parse($request->get('end_date'))->endOfDay();
+
         $legalVisits = Visit::join('visitors', 'visits.visitor_id', '=', 'visitors.id')
             ->where('visitors.entity', 'Persona jurídica')
+            ->whereBetween('visits.start_date', [$startDate, $endDate])
             ->get();
 
         $naturalVisits = Visit::join('visitors', 'visits.visitor_id', '=', 'visitors.id')
             ->where('visitors.entity', 'Persona natural')
+            ->whereBetween('visits.start_date', [$startDate, $endDate])
             ->get();
 
-        $pdf = Pdf::loadView('visits.pdf', compact('legalVisits', 'naturalVisits'))->setPaper('a4', 'landscape');
+        $pdf = Pdf::loadView('visits.pdf', compact('legalVisits', 'naturalVisits', 'startDate', 'endDate'))->setPaper('a4', 'landscape');
         return $pdf->stream();
     }
 }

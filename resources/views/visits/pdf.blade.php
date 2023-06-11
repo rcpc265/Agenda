@@ -54,11 +54,12 @@
 
 
   <p class="contenedor">
-    Fecha: {{ date('Y-m-d') }} Hora: {{ date('h:i:s a') }}
+    Fecha de creación: {{ date('Y-m-d') }} Hora: {{ date('h:i:s a') }}
   </p>
   <hr>
   <h1 class="center">Registro de Visitas </h1>
-  <h3 class="center">5 – 9 jun 2023</h3>
+  <h3 class="center">Del {{ Carbon\Carbon::parse($startDate)->format('d/m/y') }} al
+    {{ Carbon\Carbon::parse($endDate)->format('d/m/y') }}</h3>
 
   <h2>Personas Naturales</h2>
   <table class="table">

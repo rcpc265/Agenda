@@ -43,15 +43,6 @@ class VisitController extends Controller
     {
         $legalVisitors = Visitor::where('entity', 'Persona Jurídica')->orderBy('name')->get();
         $naturalVisitors = Visitor::where('entity', 'Persona Natural')->orderBy('name')->get();
-        // $legalVisitorsNames = [];
-        // foreach ($legalVisitors as $legalVisitor) {
-        //     $legalVisitorsNames[] = $legalVisitor->name;
-        // }
-        // $naturalVisitorsNames = [];
-        // foreach ($naturalVisitors as $naturalVisitor) {
-        //     $naturalVisitorsNames[] = $naturalVisitor->name;
-        // }
-        // dd ($legalVisitorsNames, 'visitantes naturales', $naturalVisitorsNames);
         $entities = Visitor::$entities;
         return view('visits.create')->with(compact('legalVisitors', 'naturalVisitors', 'entities'));
     }

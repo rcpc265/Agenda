@@ -21,9 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Ruta de las secretarias
     Route::resource('secretaries', SecretaryController::class);
-    // Route::get('visits/pdf', [VisitController::class, 'pdf'])->name('visits.pdf');
-
-    Route::get('visist/pdf', [HomeController::class, 'generatePDF'])->name('visits.pdf');
+    Route::get('visist/pdf', [HomeController::class, 'generatePDF'])->name('home.pdf');
 
     // Ruta de los visitantes
     Route::resource('visitors', VisitorController::class);
