@@ -19,10 +19,10 @@
     <div class="card-header border-1">
       <div class="row align-items-center">
         <div class="col">
-          <h2 class="mb-0">Visitas
+          <h2>Visitas
           </h2>
         </div>
-        <div class="col-9">
+        <div class="col-8">
           <form class="form-inline pr-5"
             action="{{ route('visits.index') }}">
             <div class="input-group-append"
@@ -43,17 +43,16 @@
           </form>
         </div>
 
-        <div class="col text-right pt-2">
-          <button class="btn btn-sm btn-primary "
-            data-toggle="modal"
-            data-target="#generatePDF"
-            data-placement="left"
-            type="button">PDF</button>
+        <button class="btn btn-sm btn-primary "
+          data-toggle="modal"
+          data-target="#generatePDF"
+          data-placement="left"
+          type="button">PDF</button>
 
-          <a class="btn btn-sm btn-primary btn-sm float-right"
-            data-placement="left"
-            href="{{ route('visits.create') }}">Nueva visita</a>
-        </div>
+        <a class="btn btn-sm btn-primary btn-sm float-right"
+          data-placement="left"
+          href="{{ route('visits.create') }}">Nueva visita</a>
+
         <div class="modal fade"
           id="generatePDF"
           role="dialog"
