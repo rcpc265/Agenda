@@ -21,4 +21,14 @@ class Visitor extends Model
         'Persona natural',
         'Persona jurídica'
     ];
+
+    private function capitalizeValue($value)
+    {
+        return ucwords(strtolower($value));
+    }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $this->capitalizeValue($value);
+    }
 }

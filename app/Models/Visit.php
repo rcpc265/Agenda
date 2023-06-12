@@ -45,11 +45,6 @@ class Visit extends Model
         return self::$statusColors[$this->status];
     }
 
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = $this->capitalizeValue($value);
-    }
-
     public function setSubjectAttribute($value)
     {
         $this->attributes['subject'] = $this->capitalizeValue($value);
