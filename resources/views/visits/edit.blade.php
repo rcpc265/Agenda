@@ -8,7 +8,8 @@
           <h2 class="mb-0">Nueva visita</h2>
         </div>
         <div class="col text-right">
-          <a href="{{ route('visits.index') }}" class="btn btn-sm btn-success">
+          <a class="btn btn-sm btn-success"
+            href="{{ route('visits.index') }}">
             <i class="fas fa-chevron-left"></i>
             Regresar</a>
         </div>
@@ -16,173 +17,600 @@
     </div>
 
     <div class="card-body">
-      <form action="{{ route('visits.store') }}" method="POST">
+      <form action="{{ route('visits.update', $visit) }}"
+        method="POST">
+        @method('PUT')
         @csrf
         <div class="form-group">
-          <label class="form-label" for="modal_subject">Asunto</label>
-          <input type="text" id="subject" name="subject" class="form-control" value="{{ old('subject') }}" autofocus>
+          <label class="form-label"
+            for="modal_subject">Asunto</label>
+          <input class="form-control"
+            id="subject"
+            name="subject"
+            type="text"
+            value="{{ old('subject', $visit->subject) }}"
+            autofocus>
           @error('subject')
-            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+              role="alert">
               <i class="fas fa-exclamation-circle mr-1"></i>
               <strong>{{ $message }}</strong>
             </div>
           @enderror
         </div>
-        <label class="form-label" for="modal_visitor_id">Visitante:</label>
-        <div class="form-group row">
+        @push('script')
+          <script>
+            $(document).ready(function() {
+              const defaultRanges = {
+                'lunes': [{
+                    'type': 'Persona jurídica',
+                    'start': '09:00'
+                  },
+                  {
+                    'type': 'Persona jurídica',
+                    'start': '10:00'
+                  },
+                  {
+                    'type': 'Persona jurídica',
+                    'start': '11:00'
+                  },
+                ],
+                'martes': [{
+                    'type': 'Persona natural',
+                    'start': '09:00'
+                  },
+                  {
+                    'type': 'Persona natural',
+                    'start': '10:00'
+                  },
+                  {
+                    'type': 'Persona natural',
+                    'start': '11:00'
+                  },
+                ],
+                'miércoles': [{
+                    'type': 'Persona jurídica',
+                    'start': '14:00'
+                  },
+                  {
+                    'type': 'Persona jurídica',
+                    'start': '15:00'
+                  },
+                ],
+                'jueves': [{
+                    'type': 'Persona natural',
+                    'start': '14:00'
+                  },
+                  {
+                    'type': 'Persona natural',
+                    'start': '15:00'
+                  },
+                ],
+                'viernes': [{
+                    'type': 'Persona jurídica',
+                    'start': '09:00'
+                  },
+                  {
+                    'type': 'Persona jurídica',
+                    'start': '10:00'
+                  },
+                  {
+                    'type': 'Persona jurídica',
+                    'start': '11:00'
+                  },
+                ],
+              };
+
+              function getRanges(date) {
+                const weekday = getWeekday(date);
+                return defaultRanges[weekday];
+              }
+
+              function getWeekday(selectedDate) {
+                const date = moment(selectedDate, 'DD/MM/YYYY HH:mm');
+                const weekday = date.format('dddd');
+                return weekday;
+              }
+
+              function getPersonType(selectedDate) {
+                const date = moment(selectedDate, 'DD/MM/YYYY HH:mm');
+                const weekday = getWeekday(selectedDate);
+                return defaultRanges[weekday][0]['type'];
+              }
+
+              // Format the date to be displayed
+              function formatDate(dateStr) {
+                const date = moment(dateStr, 'DD/MM/YYYY').locale('es');
+                const formattedDate = date.format('dddd, D [de] MMMM [de] YYYY');
+                const today = moment().locale('es');
+                const tomorrow = moment().add(1, 'day').locale('es');
+                const dayAfterTomorrow = moment().add(2, 'day').locale('es');
+                if (date.isSame(today, 'day')) {
+                  return `Hoy, ${formattedDate}`;
+                } else if (date.isSame(tomorrow, 'day')) {
+                  return `Mañana, ${formattedDate}`;
+                } else if (date.isSame(dayAfterTomorrow, 'day')) {
+                  return `Pasado mañana, ${formattedDate}`;
+                } else {
+                  // Capitalize first letter
+                  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+                }
+              }
+
+              // Get selected range
+              function getSelectedHour() {
+                const activeButton = $('.button-radio .btn.active');
+                const buttonText = activeButton.text();
+                const hourStr = buttonText.split(/\s-\s/)[0];
+                return !hourStr ? null : hourStr;
+              }
+
+              // Get selected date
+              function getSelectedDate() {
+                const selectedDate = $('#datepicker-btn').datepicker('getFormattedDate');
+                return selectedDate;
+              }
+
+              // Translate into spanish the date picker
+              $.fn.datepicker.dates['es'] = {
+                days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+                daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+                  "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                ],
+                monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                today: "Hoy",
+                format: "dd/mm/yyyy",
+                titleFormat: "MM yyyy",
+                /* Leverages same syntax as 'format' */
+                weekStart: 0
+              };
+
+              // Initialize datepicker
+              $('#datepicker-btn').datepicker({
+                language: 'es',
+                format: 'dd/mm/yyyy',
+                startDate: new Date(),
+                todayBtn: 'linked',
+                todayHighlight: true,
+                toggleActive: true,
+                daysOfWeekDisabled: [0, 6],
+              });
+
+              // Get the  visits that are in the database and share the same date
+              function getVisits(selectedDate) {
+                $.ajax({
+                  url: '{{ route('visits.get') }}',
+                  type: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                  },
+                  data: JSON.stringify({
+                    date: selectedDate
+                  }),
+
+                  success: function(response) {
+                    // Get the hours that are already taken
+                    const visits = response.visits.map(visit => {
+                      // Turn the date into a moment object
+                      const date = moment(visit.start_date).format('YYYY-MM-DD HH:mm:ss');
+                      //   console.log("Original");
+                      //   console.log(date);
+                      //   console.log("After");
+                      //   console.log("{{ $visit->start_date }}")
+                      if (date === "{{ $visit->start_date }}") {
+                        return;
+                      }
+
+                      // Return the hour and the subject
+                      return {
+                        date: moment(date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'),
+                        subject: visit.subject,
+                      };
+                    });
+
+                    // Enable all buttons
+                    $('.button-radio button').prop('disabled', false);
+                    // Remove any previous title
+                    $('.button-radio button').removeAttr('title');
+
+                    visits.forEach(visit => {
+                      // Disable all buttons that start with the hour text and set the title attribute to the subject
+                      $(`.button-radio button[value^="${visit.date}"]`)
+                        .prop('disabled', true)
+                        .attr('title', `Asunto: ${visit
+                        .subject}`);
+                    });
+                  }
+                });
+              }
+
+              $('#datepicker-btn').on('changeDate', function() {
+                const isSelected = $(this).datepicker('getDate');
+                if (isSelected !== null) {
+                  const selectedDate = getSelectedDate();
+                  getVisits(selectedDate);
+                  const selectedPersonType = getPersonType(selectedDate);
+
+                  // Select the person's entity according to the date
+                  // Remove all the options of the entity
+                  $('#modal_entity option').remove();
+                  // Add the selectPersonType option and select // but set it as readonly
+                  $('#modal_entity').append(
+                    `<option value="${selectedPersonType}" selected readonly>${selectedPersonType}</option>`
+                  );
+
+                  //   $('#modal_entity').val(selectedPersonType);
+                  $('#modal_entity').trigger('change');
+
+                  const todayRanges = getRanges(selectedDate);
+                  const rangeButtons = $('.button-radio button');
+                  rangeButtons.each(function() {
+                    const button = $(this);
+                    const matchingRange = todayRanges.find(range => button.text().startsWith(range.start));
+                    if (matchingRange) {
+                      button.removeClass('d-none disabled');
+                    } else {
+                      button.addClass('d-none disabled');
+                    }
+                  });
+
+                  // Set the datepicker button's text to the selected date in a human readable format
+                  const formattedDate = formatDate(selectedDate);
+                  $('#datepicker-btn').html(
+                    `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;${formattedDate}`
+                  );
+                  $('#date').val(selectedDate);
+
+                  // If the selected date is persona natural then
+                  // Enable the natural visitor seleect
+                  $('#naturalVisitorsSelect').prop('disabled', false);
+                  //   $('#legalVisitorsSelect').prop('disabled', true);
+                  $('#legalVisitorsSelect').prop('disabled', false);
+
+                  console.log("La persona seleccionada es:")
+                  console.log(selectedPersonType)
+
+                  // Display or hide the respective container and also enable or disable the respective select
+                  if (selectedPersonType === "Persona natural") {
+                    $('#naturalVisitorsContainer').removeClass('d-none');
+                    $('#legalVisitorsContainer').addClass('d-none');
+                    $('#naturalVisitorsSelect').prop('disabled', false);
+                    $('#legalVisitorsSelect').prop('disabled', true);
+                  } else if (selectedPersonType === "Persona jurídica") {
+                    $('#legalVisitorsContainer').removeClass('d-none');
+                    $('#naturalVisitorsContainer').addClass('d-none');
+                    $('#naturalVisitorsSelect').prop('disabled', true);
+                    $('#legalVisitorsSelect').prop('disabled', false);
+                  }
+
+                } else {
+                  console.log("No date is selected");
+                  // Disable the naturalVisitorsSelect and the legalVisitorsSelect
+                  $('#naturalVisitorsSelect').prop('disabled', true);
+                  $('#legalVisitorsSelect').prop('disabled', true);
+
+                  // Set the datepicker button's text to the default
+                  $('#datepicker-btn').html(
+                    `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha`
+                  );
+                  return
+                }
+              });
+
+              // Turn everything that has the class "button-radio" into an advanced button radio group
+              $('.button-radio button').click(function() {
+                if (!$(this).is(':disabled') && !$(this).hasClass('active')) {
+                  // The button is selected
+                  $(this).parent().find('.active').removeClass('active');
+                  $(this).addClass('active');
+
+                  $('#start_hour').val(moment(getSelectedHour(), 'HH:mm').format('HH:mm'));
+                } else if ($(this).hasClass('active')) {
+                  $(this).removeClass('active');
+                }
+              });
+
+              // Restore previous date
+              let oldDate = "{{ old('date') }}";
+              if (oldDate) {
+                // convert the date to a valid JS Date object
+                const date = moment(oldDate, 'DD/MM/YYYY').toDate();
+                // set the datepicker to the new date
+                $('#datepicker-btn').datepicker('setDate', oldDate);
+
+                // Set the datepicker to today if today is not sunday or saturday
+              } else if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
+                $('#datepicker-btn').datepicker('setDate', new Date());
+              }
+
+              // Restore previous hour
+              let oldStartHour = "{{ old('start_hour') }}";
+              if (oldStartHour) {
+                const startHour = moment(oldStartHour, 'HH:mm').format('HH:mm');
+                const button = $(`.button-radio button:contains(${startHour})`);
+                button.trigger('click');
+              }
+
+              // Restore saved date
+              let savedDate = "{{ $visit->start_date }}";
+              if (savedDate) {
+                const date = new Date(savedDate);
+                $('#datepicker-btn').datepicker('setDate', date);
+
+                // Restore hour
+                const dateHour = moment(savedDate, 'YY-MM-DD HH:mm:ss').toDate();
+                const startHour = moment(dateHour, 'HH:mm').format('HH:mm');
+                console.log(startHour);
+                const button = $(`.button-radio button:contains(${startHour})`);
+                // Enable the button
+                button.prop('disabled', false);
+                button.trigger('click');
+              }
+            });
+          </script>
+        @endpush
+        <div class="form-group">
+          <label class="form-label mb--1">
+            Seleccionar horario:
+            <span class="ml-1 badge-pill btn badge-info py-1"
+              id="datepicker-btn">
+              <i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha
+            </span>
+          </label>
+          <div class="button-radio d-flex flex-wrap flex-column flex-sm-row  mr--3 mt-2">
+            @php
+              $hours = ['09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '14:00 - 15:00', '15:00 - 16:00'];
+            @endphp
+            @foreach ($hours as $hour)
+              <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
+                type="button"
+                value="{{ $hour }}">{{ $hour }}</button>
+            @endforeach
+          </div>
+          @if ($errors->has('start_hour') || $errors->has('date'))
+            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+              role="alert">
+              @error('date')
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <strong>{{ $message }}</strong><br>
+              @enderror
+              @error('start_hour')
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                <strong>{{ $message }}</strong>
+              @enderror
+            </div>
+          @endif
+        </div>
+        <label class="form-label"
+          for="modal_visitor_id">Visitante:</label>
+        <div class="form-group row"
+          id="naturalVisitorsContainer">
           <div class="col pr-0">
-            <select id="visitor_id" name="visitor_id" class="form-control">
-              <option value="" disabled selected>Seleccione un visitante</option>
-              @foreach ($visitors as $visitor)
-                <option value="{{ $visitor->id }}" {{ old('visitor_id') == $visitor->id ? 'selected' : '' }}>
+            <select class="form-control"
+              id="naturalVisitorsSelect"
+              name="visitor_id">
+              <option value=""
+                disabled
+                selected>Seleccione un visitante</option>
+              @foreach ($naturalVisitors as $visitor)
+                <option value="{{ $visitor->id }}"
+                  {{ old('visitor_id', $visitor->id) == $visitor->id ? 'selected' : '' }}>
                   {{ $visitor->name }}
                 </option>
               @endforeach
             </select>
           </div>
           <div class="col-auto">
-            <button type="button" class="btn btn-success form-control" modal-launcher data-toggle="modal"
-              data-target="#add-new-visitor" id="modal-launcher">
+            <button class="btn btn-success form-control"
+              id="modal-launcher"
+              data-toggle="modal"
+              data-target="#add-new-visitor"
+              type="button"
+              modal-launcher>
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-group row d-none"
+          id="legalVisitorsContainer">
+          <div class="col pr-0">
+            <select class="form-control"
+              id="legalVisitorsSelect"
+              name="visitor_id">
+              <option id="legalVisitorsSelect"
+                value=""
+                disabled
+                selected>Seleccione un visitante</option>
+              @foreach ($legalVisitors as $visitor)
+                <option value="{{ $visitor->id }}"
+                  {{ old('visitor_id', $visitor->id) == $visitor->id ? 'selected' : '' }}>
+                  {{ $visitor->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-success form-control"
+              id="modal-launcher"
+              data-toggle="modal"
+              data-target="#add-new-visitor"
+              type="button"
+              modal-launcher>
               <i class="fas fa-plus"></i>
             </button>
           </div>
         </div>
         @error('visitor_id')
-          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert" role="alert">
+          <div class="mt--3 py-1 pl-2 alert alert-danger error-alert mb-3"
+            role="alert">
             <i class="fas fa-exclamation-circle mr-1"></i>
             <strong>{{ $message }}</strong>
           </div>
         @enderror
-        <input id="start_date" type="datetime-local" name="start_date" class="form-control"
-          value="{{ old('start_date') }}" hidden>
-        <input id="end_date" type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date') }}"
-          hidden>
-        <div class="form-group">
-          <label class="form-label mb--1">
-            Seleccionar horario:
-            <span id="datepicker-btn" class="ml-1 badge-pill btn badge-info py-1">
-              <i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha
-            </span>
-          </label>
-          <div class="button-radio d-flex justify-content-between flex-wrap flex-column flex-sm-row mr--2">
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">10:00
-              -
-              11:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3"
-              disabled>11:00 - 12:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">12:00
-              -
-              13:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">13:00
-              -
-              14:00</button>
-            <button type="button"
-              class="badge-pill btn btn-outline-primary mt-3 py-2 px-md-4 px-lg-3 flex-lg-fill text-center mr-2 mr-lg-3">14:00
-              -
-              15:00</button>
-          </div>
-          <div class="form-group mt-3">
-            <label class="form-label" for="status">Seleccionar estado:</label>
-            <select class="form-control" name="status" title="Seleccionar estado">
-              @foreach ($statuses as $status)
-                <option value="{{ $status }}" {{ old('status', $visit->status) === $status ? 'selected' : '' }}>
-                  {{ $status }}
-                </option>
-              @endforeach
-            </select>
-            @error('status')
-              <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                <strong>{{ $message }}</strong>
-              </div>
-            @enderror
-          </div>
+        <div class="form-group mt-3">
+          <label class="form-label"
+            for="status">Seleccionar estado:</label>
+          <select class="form-control"
+            name="status"
+            title="Seleccionar estado">
+            @foreach ($statuses as $status)
+              <option value="{{ $status }}"
+                {{ old('status', $visit->status) === $status ? 'selected' : '' }}>
+                {{ $status }}
+              </option>
+            @endforeach
+          </select>
+          @error('status')
+            <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+              role="alert">
+              <i class="fas fa-exclamation-circle mr-1"></i>
+              <strong>{{ $message }}</strong>
+            </div>
+          @enderror
         </div>
+        <input class="form-control"
+          id="date"
+          name="date"
+          value="{{ old('date') }}"
+          hidden>
+        <input class="form-control"
+          id="start_hour"
+          name="start_hour"
+          type="text"
+          value="{{ old('start_hour') }}"
+          hidden>
 
         <div class="d-none">
-          <input value="{{ auth()->user()->id }}" name="user_id">
+          <input name="user_id"
+            value="{{ auth()->user()->id }}">
         </div>
-        <button type="submit" class="btn btn-sm btn-primary">Crear visita</button>
+        <button class="btn btn-md btn-primary"
+          type="submit">Actualizar visita</button>
       </form>
     </div>
   </div>
 
-  <div class="modal fade" tabindex="-1" role="dialog" id="add-new-visitor">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade"
+    id="add-new-visitor"
+    role="dialog"
+    tabindex="-1">
+    <div class="modal-dialog"
+      role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h3>Añadir nuevo visitante:</h3>
-          <button type="button" class="discard-product close" data-dismiss="modal" aria-label="Close">
+          <button class="discard-product close"
+            data-dismiss="modal"
+            type="button"
+            aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <form id="modal_form">
           <div class="modal-body pb-0 pt-0">
             <div class="form-group">
-              <label class="form-label" for="modal_name">Nombre del visitante:</label>
-              <input type="text" id="modal_name" name="modal_name" class="form-control">
-              <div class="d-none" id="modal_error_name">
-                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+              <label class="form-label"
+                for="modal_name">Nombre del visitante:</label>
+              <input class="form-control"
+                id="modal_name"
+                name="modal_name"
+                type="text">
+              <div class="d-none"
+                id="modal_error_name">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+                  role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_name"></strong>
                 </div>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" form="modal_entity">Seleccionar entidad:</label>
-              <select class="form-control" name="modal_entity" title="Seleccionar entidad" id="modal_entity">
+              <label class="form-label"
+                form="modal_entity">Seleccionar entidad:</label>
+              <select class="form-control"
+                id="modal_entity"
+                name="modal_entity"
+                readonly>
                 @foreach ($entities as $entity)
-                  <option value="{{ $entity }}" {{ old('entity') === $entity ? 'selected' : '' }}>
+                  <option value="{{ $entity }}"
+                    {{ old('entity') === $entity ? 'selected' : '' }}>
                     {{ $entity }}
                   </option>
                 @endforeach
               </select>
-              <div class="d-none" id="modal_error_entity">
-                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+              <div class="d-none"
+                id="modal_error_entity">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+                  role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_entity"></strong>
                 </div>
               </div>
             </div>
-            <div class="form-group d-none" id="modal_ruc_display">
-              <label class="form-label" for="modal_ruc">RUC:</label>
-              <input type="text" name="modal_ruc" id="modal_ruc" class="form-control">
-              <div class="d-none" id="modal_error_ruc">
-                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+            <div class="form-group d-none"
+              id="modal_ruc_display">
+              <label class="form-label"
+                for="modal_ruc">RUC:</label>
+              <input class="form-control"
+                id="modal_ruc"
+                name="modal_ruc"
+                type="text">
+              <div class="d-none"
+                id="modal_error_ruc">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+                  role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_ruc"></strong>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label" for="modal_dni">DNI:</label>
-              <input type="text" id="modal_dni" name="modal_dni" class="form-control">
-              <div class="d-none" id="modal_error_dni">
-                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+            <div class="form-group"
+              id="modal_dni_display">
+              <label class="form-label"
+                for="modal_dni">DNI:</label>
+              <input class="form-control"
+                id="modal_dni"
+                name="modal_dni"
+                type="text">
+              <div class="d-none"
+                id="modal_error_dni">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+                  role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_dni"></strong>
                 </div>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="modal_phone_number">Número de celular (opcional):</label>
-              <input type="text" id="modal_phone_number" name="modal_phone_number" class="form-control">
-              <div class="d-none" id="modal_error_phone_number">
-                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+              <label class="form-label"
+                for="modal_phone_number">Número de celular (opcional):</label>
+              <input class="form-control"
+                id="modal_phone_number"
+                name="modal_phone_number"
+                type="text">
+              <div class="d-none"
+                id="modal_error_phone_number">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+                  role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_phone_number"></strong>
                 </div>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="modal_email">Correo electrónico (opcional):</label>
-              <input type="text" id="modal_email" name="modal_email" class="form-control">
-              <div class="d-none" id="modal_error_email">
-                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert" role="alert">
+              <label class="form-label"
+                for="modal_email">Correo electrónico (opcional):</label>
+              <input class="form-control"
+                id="modal_email"
+                name="modal_email"
+                type="text">
+              <div class="d-none"
+                id="modal_error_email">
+                <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
+                  role="alert">
                   <i class="fas fa-exclamation-circle mr-1"></i>
                   <strong id="modal_error_message_email"></strong>
                 </div>
@@ -190,9 +618,13 @@
             </div>
           </div>
           <div class="modal-footer pt-2">
-            <button type="button" class="discard-product btn btn-danger mr-2" data-dismiss="modal"
-              id="cancel-btn">Cancelar</button>
-            <button id="add-visitor" type="submit" class="btn btn-md btn-success">Crear visitante</button>
+            <button class="discard-product btn btn-danger mr-2"
+              id="cancel-btn"
+              data-dismiss="modal"
+              type="button">Cancelar</button>
+            <button class="btn btn-md btn-success"
+              id="add-visitor"
+              type="submit">Crear visitante</button>
           </div>
         </form>
       </div>
@@ -203,12 +635,21 @@
 
 @push('script')
   <script>
-    console.clear();
+    function getFormData(formId) {
+      const formElement = document.querySelector(`#${formId}`);
+      const formData = new FormData(formElement);
+      const data = Object.keys(Object.fromEntries(formData));
+      return data;
+    }
+
     // Get all the form-control selectors
     const formControls = document.querySelectorAll('select.form-control');
-    const visitor_choices = new Choices('#visitor_id');
+    const naturalVisitorChoices = new Choices('#naturalVisitorsSelect');
+    const legalVisitorChoices = new Choices('#legalVisitorsSelect');
 
-    const fields = ['name', 'entity', 'ruc', 'dni', 'phone_number', 'email'];
+    // const fields = ['name', 'entity', 'ruc', 'dni', 'phone_number', 'email'];
+    let fields = getFormData('modal_form');
+    fields = fields.map(field => field.replace('modal_', ''));
     const fieldValues = {};
 
     const fieldErrors = {};
@@ -221,11 +662,6 @@
 
     $("#cancel-btn").click(function(event) {
       $('#modal_form').trigger('reset');
-      // Select personas naturales by default
-      $('#modal_entity').val('Persona natural');
-      $('#modal_ruc_display').addClass('d-none');
-      $('#modal_ruc_display input').prop('disabled', true);
-
       // Hide all the error boxes
       for (const field in fieldErrors) {
         fieldErrors[field].box.addClass('d-none');
@@ -234,6 +670,7 @@
 
     $("#add-visitor").click(function(event) {
       event.preventDefault();
+      console.log(fields);
       for (const field of fields) {
         fieldValues[field] = $(`#modal_${field}`).val();
       };
@@ -253,11 +690,19 @@
           $('#cancel-btn').click();
 
           // Add the new visitor to the select
-          visitor_choices.setChoices([{
-            value: response.id,
-            label: response.name,
-            selected: true
-          }], 'value', 'label', false)
+          if ($('#naturalVisitorsContainer').is(':visible')) {
+            naturalVisitorChoices.setChoices([{
+              value: response.id,
+              label: response.name,
+              selected: true
+            }], 'value', 'label', false)
+          } else {
+            legalVisitorChoices.setChoices([{
+              value: response.id,
+              label: response.name,
+              selected: true
+            }], 'value', 'label', false)
+          }
         },
 
         error: function(response) {
@@ -285,148 +730,24 @@
 
 @push('script')
   <script>
-    // Show or hide RUC input
-    $('#modal_entity').on('change', function() {
-      if (this.value === 'Persona jurídica') {
-        $('#modal_ruc_display').removeClass('d-none');
-        $('#modal_ruc_display input').prop('disabled', false);
-      } else {
-        $('#modal_ruc_display').addClass('d-none');
-        $('#modal_ruc_display input').prop('disabled', true);
-      }
-    });
-
-    // Execute at least once
-    $('#entity').trigger('change');
-  </script>
-@endpush
-
-@push('script')
-  <script>
     $(document).ready(function() {
-      // Give the date a more verbose format
-      function formatDate(dateStr) {
-        const date = moment(dateStr, 'DD/MM/YYYY').locale('es');
-        const formattedDate = date.format('dddd, D [de] MMMM [de] YYYY');
-        return formattedDate;
-      }
-
-      // Get selected range
-      function getSelectedHour() {
-        const activeButton = $('.button-radio .btn.active');
-        const buttonText = activeButton.text();
-        const hourStr = buttonText.split(/\s-\s/)[0];
-        return !hourStr ? null : hourStr;
-      }
-
-      // Get selected date
-      function getSelectedDate() {
-        const selectedDate = $('#datepicker-btn').datepicker('getFormattedDate');
-        return selectedDate;
-      }
-
-      // Get full date
-      function getFullDate() {
-        const selectedDate = getSelectedDate();
-        const selectedHour = getSelectedHour();
-        if (!selectedHour || !selectedDate) {
-          return null;
-        }
-        const fullDate = moment(`${selectedDate} ${selectedHour}`, 'DD/MM/YYYY HH:mm');
-        // Return a valid string that can be saved inside a date input
-        return fullDate;
-      }
-
-      // Fill form start date and end date
-      function fillFormDates() {
-        const fullDate = getFullDate();
-        if (!fullDate) {
-          return
-        }
-        $('#start_date').val(fullDate.format('YYYY-MM-DD HH:mm'));
-        // The end date must be an hour after the full date
-        $('#end_date').val(moment(fullDate).add(1, 'hour').format('YYYY-MM-DD HH:mm'));
-        console.log($('#start_date').val());
-        console.log($('#end_date').val());
-      }
-
-      // Translate into spanish
-      $.fn.datepicker.dates['es'] = {
-        days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"],
-        daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
-        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
-          "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        ],
-        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-        today: "Hoy",
-        clear: "Limpiar",
-        format: "dd/mm/yyyy",
-        titleFormat: "MM yyyy",
-        /* Leverages same syntax as 'format' */
-        weekStart: 0
-      };
-
-      // Initialize datepicker
-      $('#datepicker-btn').datepicker({
-        language: 'es',
-        format: 'dd/mm/yyyy',
-        startDate: new Date(),
-        todayBtn: 'linked',
-        todayHighlight: true,
-        toggleActive: true,
-      });
-
-      // Update button text when date changes
-      $('#datepicker-btn').on('changeDate', function() {
-        const isSelected = $(this).datepicker('getDate');
-        if (isSelected !== null) {
-          const selectedDate = getSelectedDate();
-          const formattedDate = formatDate(selectedDate);
-          $('#datepicker-btn').html(
-            `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;${formattedDate}`
-          );
-
-          fillFormDates();
+      $('#modal_entity').on('change', function() {
+        if (this.value === 'Persona jurídica') {
+          $('#modal_ruc_display').removeClass('d-none');
+          $('#modal_ruc').prop('disabled', false);
+          $('#modal_dni_display').addClass('d-none');
+          $('#modal_dni').prop('disabled', true);
         } else {
-          $('#datepicker-btn').html(
-            `<i class="far fa-calendar-alt"></i>&nbsp;&nbsp;Fecha`
-          );
-          return
+          $('#modal_ruc_display').addClass('d-none');
+          $('#modal_ruc').prop('disabled', true);
+          $('#modal_dni_display').removeClass('d-none');
+          $('#modal_dni').prop('disabled', false);
         }
       });
 
-      // Turn everything that has the class "button-radio" into an advanced button radio group
-      $('.button-radio button').click(function() {
-        if (!$(this).is(':disabled') && !$(this).hasClass('active')) {
-          // The button is selected
-          $(this).parent().find('.active').removeClass('active');
-          $(this).addClass('active');
-
-          fillFormDates();
-        } else if ($(this).hasClass('active')) {
-          $(this).removeClass('active');
-        }
-      });
-
-
-      // Restore previous date
-      let oldStartDate = "{{ old('start_date') }}";
-      if (oldStartDate) {
-        console.log(oldStartDate)
-        // oldStartDate = moment(oldStartDate, 'DD/MM/YYYY HH:mm');
-        // turn old start date into a date object
-        oldStartDate = new Date(oldStartDate);
-        console.log(oldStartDate)
-        $('#datepicker-btn').datepicker('setDate', oldStartDate);
-        $('#datepicker-btn').trigger('changeDate');
-        // get the hour from the oldStartDate
-        // const startHour = oldStartDate.format('HH:mm');
-        // console.log(startHour)
-        // // click the button group that starts with the startHour
-        // $(`.button-radio .btn:contains("${startHour}")`).click();
-      }
-    });
+      // Execute at least once
+      $('#modal_entity').change();
+    })
   </script>
 @endpush
 

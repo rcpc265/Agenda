@@ -68,16 +68,32 @@ class VisitController extends Controller
 
     public function edit(Visit $visit)
     {
-        $visitors = Visitor::orderBy('name')->get();
         $entities = Visitor::$entities;
+        $legalVisitors = Visitor::where('entity', 'Persona Jurídica')->orderBy('name')->get();
+        $naturalVisitors = Visitor::where('entity', 'Persona Natural')->orderBy('name')->get();
         $statuses = Visit::$statuses;
-        return view('visits.edit', compact('visit', 'statuses', 'visitors', 'entities'));
+
+        return view('visits.edit', compact('visit', 'statuses', 'legalVisitors', 'naturalVisitors', 'entities'));
     }
 
     public function update(StoreVisitRequest $request, Visit $visit)
     {
-        $visit->update($request->validated());
-        return redirect()->route('visits.index')->with(['status' => "¡La visita \"$visit->name\" fue editada exitosamente!"]);
+        $date = $request->get('date');
+        $start_hour = $request->get('start_hour');
+        $start_date = Carbon::createFromFormat('d/m/Y H:i', $date . ' ' . $start_hour);
+        $end_date = $start_date->copy()->addHour();
+
+        // Save the data
+        $visit->update([
+            'subject' => $request->get('subject'),
+            'start_date' => $start_date,
+            'status' => $request->get('status'),
+            'end_date' => $end_date,
+            'visitor_id' => $request->get('visitor_id'),
+            'user_id' => $request->get('user_id'),
+        ]);
+
+        return redirect()->route('visits.index')->with(['status' => "¡La visita fue editada exitosamente!"]);
     }
 
     public function updateStatus(Request $request): JsonResponse
