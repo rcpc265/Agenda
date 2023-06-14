@@ -248,6 +248,8 @@
                   const todayRanges = getRanges(selectedDate);
                   const rangeButtons = $('.button-radio button');
                   rangeButtons.each(function() {
+                    // unclick all buttons
+                    $(this).removeClass('active');
                     const button = $(this);
                     const matchingRange = todayRanges.find(range => button.text().startsWith(range.start));
                     if (matchingRange) {
