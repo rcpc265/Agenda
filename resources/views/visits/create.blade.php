@@ -226,22 +226,17 @@
                   const selectedPersonType = getPersonType(selectedDate);
 
                   // Select the person's entity according to the date
-                  $('#modal_entity').val(selectedPersonType);
+                  // Remove all the options of the entity
+                  $('#modal_entity option').remove();
+                  // Add the selectPersonType option and select // but set it as readonly
+                  $('#modal_entity').append(
+                    `<option value="${selectedPersonType}" selected readonly>${selectedPersonType}</option>`
+                  );
+
+                  //   $('#modal_entity').val(selectedPersonType);
                   $('#modal_entity').trigger('change');
 
-                  // Show or hide the buttons to select the range based on the date
-                  //   const weekday = getWeekday(selectedDate);
-                  //   console.clear();
-                  //   console.log("Dia de la semana");
-                  //   console.log(weekday)
-                  //   console.log("\n");
-                  //   console.log("Rangos del dia de hoy");
                   const todayRanges = getRanges(selectedDate);
-                  //   todayRanges.forEach(range => {
-                  //     console.log(range.start);
-                  //   });
-                  //   console.log("\n");
-                  //   console.log("Range buttons innerTxt");
                   const rangeButtons = $('.button-radio button');
                   rangeButtons.each(function() {
                     const button = $(this);
@@ -262,6 +257,10 @@
 
                   // If the selected date is persona natural then
                   // Enable the natural visitor seleect
+                  $('#naturalVisitorsSelect').prop('disabled', false);
+                  //   $('#legalVisitorsSelect').prop('disabled', true);
+                  $('#legalVisitorsSelect').prop('disabled', false);
+
                   console.log("La persona seleccionada es:")
                   console.log(selectedPersonType)
 
@@ -315,7 +314,7 @@
 
                 // Set the datepicker to today if today is not sunday or saturday
               } else if (moment().isoWeekday() !== 6 && moment().isoWeekday() !== 7) {
-                // $('#datepicker-btn').datepicker('setDate', new Date());
+                $('#datepicker-btn').datepicker('setDate', new Date());
               }
 
               // Restore previous hour
@@ -337,26 +336,14 @@
             </span>
           </label>
           <div class="button-radio d-flex flex-wrap flex-column flex-sm-row  mr--3 mt-2">
-            <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
-              type="button"
-              value="09:00 - 10:00">09:00
-              - 10:00</button>
-            <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
-              type="button"
-              value="10:00 - 11:00">10:00
-              - 11:00</button>
-            <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
-              type="button"
-              value="11:00 - 12:00">11:00
-              - 12:00</button>
-            <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
-              type="button"
-              value="14:00 - 15:00">14:00
-              - 15:00</button>
-            <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
-              type="button"
-              value="15:00 - 16:00">15:00
-              - 16:00</button>
+            @php
+              $hours = ['09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '14:00 - 15:00', '15:00 - 16:00'];
+            @endphp
+            @foreach ($hours as $hour)
+              <button class="badge-pill btn btn-outline-primary px-lg-5 px-md-4 mr-3 mt-2"
+                type="button"
+                value="{{ $hour }}">{{ $hour }}</button>
+            @endforeach
           </div>
           @if ($errors->has('start_hour') || $errors->has('date'))
             <div class="mt-2 py-1 pl-2 alert alert-danger error-alert"
@@ -376,12 +363,10 @@
           for="modal_visitor_id">Visitante:</label>
         <div class="form-group row"
           id="naturalVisitorsContainer">
-          <div class="col pr-0"
-            title="Seleccione una fecha primero">
+          <div class="col pr-0">
             <select class="form-control"
               id="naturalVisitorsSelect"
-              name="visitor_id"
-              disabled>
+              name="visitor_id">
               <option value=""
                 disabled
                 selected>Seleccione un visitante</option>
@@ -399,8 +384,6 @@
               data-toggle="modal"
               data-target="#add-new-visitor"
               type="button"
-              title="Seleccione una fecha primero"
-              disabled
               modal-launcher>
               <i class="fas fa-plus"></i>
             </button>
@@ -410,7 +393,7 @@
           id="legalVisitorsContainer">
           <div class="col pr-0">
             <select class="form-control"
-              id="visitor_id"
+              id="legalVisitorsSelect"
               name="visitor_id">
               <option id="legalVisitorsSelect"
                 value=""
@@ -504,8 +487,7 @@
               <select class="form-control"
                 id="modal_entity"
                 name="modal_entity"
-                title="Seleccionar entidad"
-                disabled>
+                readonly>
                 @foreach ($entities as $entity)
                   <option value="{{ $entity }}"
                     {{ old('entity') === $entity ? 'selected' : '' }}>
@@ -607,11 +589,21 @@
 
 @push('script')
   <script>
+    function getFormData(formId) {
+      const formElement = document.querySelector(`#${formId}`);
+      const formData = new FormData(formElement);
+      const data = Object.keys(Object.fromEntries(formData));
+      return data;
+    }
+
     // Get all the form-control selectors
     const formControls = document.querySelectorAll('select.form-control');
-    const visitor_choices = new Choices('#visitor_id');
+    const naturalVisitorChoices = new Choices('#naturalVisitorsSelect');
+    const legalVisitorChoices = new Choices('#legalVisitorsSelect');
 
-    const fields = ['name', 'entity', 'ruc', 'dni', 'phone_number', 'email'];
+    // const fields = ['name', 'entity', 'ruc', 'dni', 'phone_number', 'email'];
+    let fields = getFormData('modal_form');
+    fields = fields.map(field => field.replace('modal_', ''));
     const fieldValues = {};
 
     const fieldErrors = {};
@@ -632,6 +624,7 @@
 
     $("#add-visitor").click(function(event) {
       event.preventDefault();
+      console.log(fields);
       for (const field of fields) {
         fieldValues[field] = $(`#modal_${field}`).val();
       };
@@ -651,11 +644,19 @@
           $('#cancel-btn').click();
 
           // Add the new visitor to the select
-          visitor_choices.setChoices([{
-            value: response.id,
-            label: response.name,
-            selected: true
-          }], 'value', 'label', false)
+          if ($('#naturalVisitorsContainer').is(':visible')) {
+            naturalVisitorChoices.setChoices([{
+              value: response.id,
+              label: response.name,
+              selected: true
+            }], 'value', 'label', false)
+          } else {
+            legalVisitorChoices.setChoices([{
+              value: response.id,
+              label: response.name,
+              selected: true
+            }], 'value', 'label', false)
+          }
         },
 
         error: function(response) {
@@ -684,23 +685,22 @@
 @push('script')
   <script>
     $(document).ready(function() {
-      // Show or hide RUC input
       $('#modal_entity').on('change', function() {
         if (this.value === 'Persona jurídica') {
           $('#modal_ruc_display').removeClass('d-none');
-          $('#modal_ruc_display input').prop('disabled', false);
+          $('#modal_ruc').prop('disabled', false);
           $('#modal_dni_display').addClass('d-none');
-          $('#modal_dni_display input').prop('disabled', true);
+          $('#modal_dni').prop('disabled', true);
         } else {
           $('#modal_ruc_display').addClass('d-none');
-          $('#modal_ruc_display input').prop('disabled', true);
+          $('#modal_ruc').prop('disabled', true);
           $('#modal_dni_display').removeClass('d-none');
-          $('#modal_dni_display input').prop('disabled', false);
+          $('#modal_dni').prop('disabled', false);
         }
       });
 
       // Execute at least once
-      $('#entity').trigger('change');
+      $('#modal_entity').change();
     })
   </script>
 @endpush
