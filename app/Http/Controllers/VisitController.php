@@ -16,16 +16,26 @@ class VisitController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('visitor');
-
-        $visits = Visit::query()
-            ->when($search, function ($query, $search) {
-                return $query->whereHas('visitor', function ($query) use ($search) {
-                    $query->where('name', 'like', "%$search%");
-                });
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
+        if (auth()->guest()) {
+            $visits = Visit::query()
+                ->when($search, function ($query, $search) {
+                    return $query->whereHas('visitor', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
+                })
+                ->where('status', 'Confirmado')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        } else {
+            $visits = Visit::query()
+                ->when($search, function ($query, $search) {
+                    return $query->whereHas('visitor', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        }
         return view('visits.index', compact('visits'));
     }
 
