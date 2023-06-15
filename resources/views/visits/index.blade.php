@@ -49,9 +49,11 @@
           data-placement="left"
           type="button">PDF</button>
 
-        <a class="btn btn-sm btn-primary btn-sm float-right"
-          data-placement="left"
-          href="{{ route('visits.create') }}">Nueva visita</a>
+        @auth()
+          <a class="btn btn-sm btn-primary btn-sm float-right"
+            data-placement="left"
+            href="{{ route('visits.create') }}">Nueva visita</a>
+        @endauth()
 
         <div class="modal fade"
           id="generatePDF"
@@ -135,80 +137,90 @@
           <thead class="thead-light">
             <tr>
               <th scope="col">Asunto</th>
-              <th scope="col">Estado</th>
+              @auth()
+                <th scope="col">Estado</th>
+              @endauth
               <th scope="col">Nombre del visitante</th>
               <th scope="col">Fecha</th>
               <th class="text-center"
                 scope="col">Hora de inicio y<br>Hora final</th>
-              <th scope="col">Opciones</th>
+              @auth()
+                <th scope="col">Opciones</th>
+              @endauth
             </tr>
           </thead>
           <tbody>
-            @push('script')
-              <script>
-                function storeStatus(id, status) {
-                  $.ajaxSetup({
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                  })
+            @auth()
+              @push('script')
+                <script>
+                  function storeStatus(id, status) {
+                    $.ajaxSetup({
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                      },
+                    })
 
-                  $.ajax({
-                    url: "{{ route('visits.status') }}",
-                    method: 'PATCH',
-                    data: JSON.stringify({
-                      id,
-                      status
-                    }),
-                    success: function(response) {
-                      console.log(response.message);
-                    },
+                    $.ajax({
+                      url: "{{ route('visits.status') }}",
+                      method: 'PATCH',
+                      data: JSON.stringify({
+                        id,
+                        status
+                      }),
+                      success: function(response) {
+                        console.log(response.message);
+                      },
 
-                    error: function(response) {
-                      console.log(`Error: ${response.responseJSON.error}`);
-                    }
-                  });
-                }
-              </script>
-            @endpush
+                      error: function(response) {
+                        console.log(`Error: ${response.responseJSON.error}`);
+                      }
+                    });
+                  }
+                </script>
+              @endpush
+            @endauth
             @foreach ($visits as $visit)
               <tr>
                 <td scope="row">{{ $visit->subject }}</td>
-                <td>
-                  <div x-data="{
-                      badges: [
-                          { status: 'Pendiente', color: 'badge-primary' },
-                          { status: 'Confirmado', color: 'badge-success' },
-                          { status: 'Cancelado', color: 'badge-danger' }
-                      ],
-                      currentIndex: 0,
-                      visitId: '{{ $visit->id }}',
-                      get status() { return this.badges[this.currentIndex].status; },
-                  }"
-                    x-init="currentIndex = badges.findIndex(badge => badge.status === '{{ $visit->status }}');">
-                    <button type="button"
-                      x-cloak
-                      x-on:click="currentIndex = (currentIndex + 1) % badges.length; storeStatus(visitId, status);"
-                      :class="['btn', 'btn-sm', 'badge-pill', 'badge', badges[currentIndex].color]">
-                      <span x-text="status"></span>
-                    </button>
-                  </div>
-                </td>
+                @auth()
+                  <td>
+                    <div x-data="{
+                        badges: [
+                            { status: 'Pendiente', color: 'badge-primary' },
+                            { status: 'Confirmado', color: 'badge-success' },
+                            { status: 'Cancelado', color: 'badge-danger' }
+                        ],
+                        currentIndex: 0,
+                        visitId: '{{ $visit->id }}',
+                        get status() { return this.badges[this.currentIndex].status; },
+                    }"
+                      x-init="currentIndex = badges.findIndex(badge => badge.status === '{{ $visit->status }}');">
+                      <button type="button"
+                        x-cloak
+                        x-on:click="currentIndex = (currentIndex + 1) % badges.length; storeStatus(visitId, status);"
+                        :class="['btn', 'btn-sm', 'badge-pill', 'badge', badges[currentIndex].color]">
+                        <span x-text="status"></span>
+                      </button>
+                    </div>
+                  </td>
+                @endauth
                 <td>{{ $visit->visitor->name }}</td>
                 <td>{{ Carbon\Carbon::parse($visit->start_date)->format('d/m') }}</td>
                 <td class="text-center">{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
                   {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
-                <td>
-                  <a class="btn btn-sm btn-primary"
-                    href="{{ route('visits.edit', $visit) }}">Editar</a>
+                @auth()
+                  <td>
+                    <a class="btn btn-sm btn-primary"
+                      href="{{ route('visits.edit', $visit) }}">Editar</a>
 
-                  <!-- Button trigger modal -->
-                  <button class="btn btn-sm btn-danger"
-                    data-toggle="modal"
-                    data-target="#deleteModal{{ $visit->id }}"
-                    type="button">Eliminar</button>
-                </td>
+                    <!-- Button trigger modal -->
+                    <button class="btn btn-sm btn-danger"
+                      data-toggle="modal"
+                      data-target="#deleteModal{{ $visit->id }}"
+                      type="button">Eliminar</button>
+                  </td>
+                @endauth
               </tr>
 
               <!-- Modal -->
