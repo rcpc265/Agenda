@@ -59,8 +59,7 @@
                     type="password"
                     placeholder="Contraseña"
                     required
-                    {{-- @dd(config('app.env')) --}}
-                    {{ config('app.env') === 'local' ? "value='soporte1'" : '' }}>
+                    @if (config('app.env') === 'local') value="soporte1" @endif>
                 </div>
               </div>
               <div class="custom-control custom-control-alternative custom-checkbox">

@@ -16,7 +16,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Ruta de las visitas
     Route::patch('visits/status', [VisitController::class, 'updateStatus'])->name('visits.status');
-    Route::resource('visits', VisitController::class)->except(['edit', 'update']);
+    Route::resource('visits', VisitController::class)->except('index');
     Route::post('visits/get', [VisitController::class, 'getVisits'])->name('visits.get');
 
     // Ruta de las secretarias
