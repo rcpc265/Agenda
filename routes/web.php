@@ -21,12 +21,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Ruta de las secretarias
     Route::resource('secretaries', SecretaryController::class);
-    Route::get('visist/pdf', [HomeController::class, 'generatePDF'])->name('home.pdf');
 
     // Ruta de los visitantes
     Route::resource('visitors', VisitorController::class);
 });
 
 Route::get('visits', [VisitController::class, 'index'])->name('visits.index');
+Route::get('visist/pdf', [HomeController::class, 'generatePDF'])->name('home.pdf');
 
 Auth::routes();
