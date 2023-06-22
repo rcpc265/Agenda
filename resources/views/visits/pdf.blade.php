@@ -10,7 +10,6 @@
   <style>
     .center {
       text-align: center;
-
     }
 
     .logo {
