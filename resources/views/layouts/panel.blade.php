@@ -44,6 +44,65 @@
     [x-cloak] {
       display: none !important;
     }
+
+    .card-header {
+        margin-top: 5px;
+    }
+
+    table {
+        margin-top: 15px;
+    }
+
+    th{
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+
+    }
+
+    .thead-color{
+        background-color: #3A83C3;
+    }
+
+    .logo {
+      height: 80px;
+      width: 200px;
+      padding-bottom: 20px;
+    }
+
+
+
+    .linea-vertical {
+        border-left: 3px solid black; /* Establece una línea sólida de 1 píxel de ancho y color negro */
+        height: 50px; /* Establece la altura deseada para la línea vertical */
+    }
+    hr {
+        border-color: black; /* Cambia el color de la línea a negro */
+        border-style: solid; /* Establece el estilo de la línea como sólida */
+        font-weight: bold; /* Aplica negrita al texto */
+
+        margin-top: -70px;
+        margin-left: 1%;
+        margin-bottom: -0px;
+
+    }
+    .subtitle{
+
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 4vmin;
+        vertical-align: middle;
+        color: #ABA2A2;
+        padding-top: 6px;
+    }
+
+    .container {
+      display: flex; /* Establece un contenedor flexible */
+      justify-content: left; /* Distribuye los elementos horizontalmente */
+      gap: 10px;
+      margin-top: -3%;
+      margin-left: 10px;
+    }
+
+
   </style>
   <!-- Alpine Core -->
   <script defer
@@ -171,7 +230,7 @@
           </form>
         @endif --}}
         <!-- User -->
-        @auth
+    @auth
         <ul class="navbar-nav align-items-center d-none d-md-flex">
           <li class="nav-item dropdown">
             <a class="nav-link pr-0"
@@ -194,19 +253,56 @@
             @include('includes.panel.userOptions')
           </li>
         </ul>
-        @endauth
+
+
+
+    @endauth
+
       </div>
     </nav>
+
+
     <!-- End Navbar -->
     <!-- Header -->
-    <div class="header bg-gradient-info pb-8 pt-4 pt-md-6">
-    </div>
+    @auth
+        <div class="header bg-gradient-info pb-8 pt-4 pt-md-6">
+
+        </div>
+    @endauth
+
+
+    @guest()
+        <div class="header bg-gradient-white pb-8 pt-4 pt-md-6">
+            <div class="container">
+                <div class="element">
+                    <img class="logo"src="img/brand/logo_visitasMPP.png" alt="logo visitas">
+                </div>
+                <div class="element">
+                    <div class="linea-vertical"></div>
+                </div>
+                <div class="element">
+                    <h2 class="subtitle" >Registro de Visitas</h2>
+                </div>
+
+
+            </div>
+
+
+            <div class="linea-vertical"></div>
+            <hr>
+        </div>
+
+    @endguest
+
+
     <div class="container-fluid mt--7">
       @yield('content')
       <!-- Footer -->
       @include('includes.panel.footer')
     </div>
   </div>
+
+
   <!--   Core   -->
   <script src="{{ asset('js/plugins/jquery/dist/jquery.min.js') }}"></script>
   <script src="{{ asset('js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>

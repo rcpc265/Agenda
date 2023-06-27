@@ -19,9 +19,10 @@
     <div class="card-header border-1">
       <div class="row align-items-center">
         <div class="col">
-          <h2>Visitas
-          </h2>
+          <h2 >Visitas</h2>
+
         </div>
+
         <div class="col-8">
           <form class="form-inline pr-5"
             action="{{ route('visits.index') }}">
@@ -134,7 +135,15 @@
       <div class="table-responsive">
         <!-- Projects table -->
         <table class="table align-items-center table-flush">
-          <thead class="thead-light">
+
+           @guest
+            <thead class="thead-color"  >
+           @endguest
+
+           @auth
+            <thead class="thead-light">
+           @endauth
+
             <tr>
               <th scope="col">Asunto</th>
               @auth()

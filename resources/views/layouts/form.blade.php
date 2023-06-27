@@ -51,16 +51,16 @@
                     </div>
                     <!-- Navbar items -->
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link nav-link-icon" href="{{ route('register') }}">
                                 <i class="ni ni-circle-08 text-dark"></i>
                                 <span class="nav-link-inner--text text-dark">Regístrate</span>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-icon" href="{{ route('login') }}">
+                        </li> --}}
+                        <li class="nav-item ">
+                            <a class="nav-link nav-link-icon " href="{{ route('login') }}">
                                 <i class="ni ni-key-25 text-dark"></i>
-                                <span class="nav-link-inner--text text-dark">Iniciar sesión</span>
+                                <span class="nav-link-inner--text text-dark ">Iniciar sesión</span>
                             </a>
                         </li>
                     </ul>
@@ -82,8 +82,8 @@
 
             <!-- <a href="http://actividades.munipuno.gob.pe/home">
                 <img src="..\..\..\..\argon-dashboard-master\assets\img\theme\react.png" alt="Admin Logo" height="50">
-                
-                
+
+
                 <b>Visitas</b>MPP
 
             </a> -->
