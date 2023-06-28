@@ -60,66 +60,65 @@
   <h3 class="center">Del {{ Carbon\Carbon::parse($startDate)->format('d/m/y') }} al
     {{ Carbon\Carbon::parse($endDate)->format('d/m/y') }}</h3>
 
-  <h2>Personas Naturales</h2>
-  <table class="table">
-    <thead class="cabecera">
-      <tr>
-        <th scope="col"
-          >Asunto</th>
-        <th scope="col"
-          >Estado</th>
-        <th scope="col"
-          >Nombre del visitante</th>
-        <th scope="col">DNI</th>
-        <th scope="col"
-          >Fecha</th>
-        <th class="text-center"
-          scope="col"
-          >Hora de inicio y<br>Hora final</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($naturalVisits as $visit)
+  @if ($naturalVisits->count() !== 0)
+    <h2>Personas Naturales</h2>
+    <table class="table">
+      <thead class="cabecera">
         <tr>
-          <td scope="row">{{ $visit->subject }}</td>
-          <td>{{ $visit->status }}</td>
-          <td>{{ $visit->name }}</td>
-          <td>{{ $visit->dni }}</td>
-          <td>{{ Carbon\Carbon::parse($visit->start_date)->format('d/m/y') }}</td>
-          <td>{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
-            {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
+          <th scope="col">Asunto</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Nombre del visitante</th>
+          <th scope="col">DNI</th>
+          <th scope="col">Fecha</th>
+          <th class="text-center"
+            scope="col">Hora de inicio y<br>Hora final</th>
         </tr>
-      @endforeach
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @foreach ($naturalVisits as $visit)
+          <tr>
+            <td scope="row">{{ $visit->subject }}</td>
+            <td>{{ $visit->status }}</td>
+            <td>{{ $visit->name }}</td>
+            <td>{{ $visit->dni }}</td>
+            <td>{{ Carbon\Carbon::parse($visit->start_date)->format('d/m/y') }}</td>
+            <td>{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
+              {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+  @endif
 
-  <h2>Personas Juridicas</h2>
-  <table class="table">
-    <thead class="cabecera">
-      <tr>
-        <th scope="col">Asunto</th>
-        <th scope="col">Estado</th>
-        <th scope="col">Nombre del visitante</th>
-        <th scope="col">RUC</th>
-        <th scope="col">Fecha</th>
-        <th class="text-center"
-          scope="col">Hora de inicio y<br>Hora final</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($legalVisits as $visit)
+  @if ($legalVisits->count() !== 0)
+    <h2>Personas Juridicas</h2>
+    <table class="table">
+      <thead class="cabecera">
         <tr>
-          <td scope="row">{{ $visit->subject }}</td>
-          <td>{{ $visit->status }}</td>
-          <td>{{ $visit->name }}</td>
-          <td>{{ $visit->ruc }}</td>
-          <td>{{ Carbon\Carbon::parse($visit->start_date)->format('d/m/y') }}</td>
-          <td>{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
-            {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
+          <th scope="col">Asunto</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Nombre del visitante</th>
+          <th scope="col">RUC</th>
+          <th scope="col">Fecha</th>
+          <th class="text-center"
+            scope="col">Hora de inicio y<br>Hora final</th>
         </tr>
-      @endforeach
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @foreach ($legalVisits as $visit)
+          <tr>
+            <td scope="row">{{ $visit->subject }}</td>
+            <td>{{ $visit->status }}</td>
+            <td>{{ $visit->name }}</td>
+            <td>{{ $visit->ruc }}</td>
+            <td>{{ Carbon\Carbon::parse($visit->start_date)->format('d/m/y') }}</td>
+            <td>{{ Carbon\Carbon::parse($visit->start_date)->format('H:i') }} -
+              {{ Carbon\Carbon::parse($visit->end_date)->format('H:i') }}</td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+  @endif
 </body>
 
 </html>
