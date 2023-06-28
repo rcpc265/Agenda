@@ -81,10 +81,10 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col-6">
+          {{-- <div class="col-6">
             <a class="text-dark"
               href="{{ route('password.request') }}"><small>¿Olvidaste tu contraseña?</small></a>
-          </div>
+          </div> --}}
           {{-- <div class="col-6 text-right">
             <a class="text-dark"
               href="{{ route('register') }}"><small>Crear nueva cuenta </small></a>

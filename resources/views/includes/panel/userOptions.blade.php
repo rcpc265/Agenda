@@ -14,11 +14,11 @@
     <i class="ni ni-calendar-grid-58"></i>
     <span>Mis citas</span>
   </a> --}}
-  <a class="dropdown-item"
+  {{-- <a class="dropdown-item"
     href="#">
     <i class="ni ni-support-16"></i>
     <span>Ayuda</span>
-  </a>
+  </a> --}}
   <div class="dropdown-divider"></div>
   <a class="dropdown-item"
     href="{{ route('logout') }}"
