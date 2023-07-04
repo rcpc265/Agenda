@@ -1,8 +1,8 @@
 @php
   function is_active($expression)
   {
-      $expression = $expression . '*';
-      return request()->is($expression) ? 'active' : '';
+    $expression = $expression . '*';
+    return request()->is($expression) ? 'active' : '';
   }
 
   function is_admin()
@@ -12,7 +12,7 @@
 @endphp
 
 <!-- Heading -->
-<h6 class="navbar-heading text-muted">Gestión</h6>
+<h6 class="navbar-heading text-muted mt--4">Gestión</h6>
 <ul class="navbar-nav">
   <li class="nav-item {{ is_active('home') }}">
     <a class="nav-link {{ is_active('home') }}"
@@ -55,7 +55,7 @@
   </li>
 </ul>
 <!-- Divider -->
-<hr class="my-3">
+{{-- <hr class="my-3"> --}}
 <!-- Heading -->
 {{-- <h6 class="navbar-heading text-muted">Reportes</h6> --}}
 {{-- <h6 class="navbar-heading text-muted">Reportes</h6>

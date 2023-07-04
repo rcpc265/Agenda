@@ -277,7 +277,7 @@
         </table>
 
         @if ($visits->hasPages())
-          <hr class="mt-1 mb-3">
+          {{-- <hr class="mt-1 mb-3"> --}}
           <div class="card-body d-sm-flex justify-content-center py-0">
             {{ $visits->links() }}
           </div>
