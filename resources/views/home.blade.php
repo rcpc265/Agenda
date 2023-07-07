@@ -1,7 +1,15 @@
 @extends('layouts.panel')
 @section('title', 'Inicio')
 @section('content')
-
+  <style>
+    // Display the header below the menu bar
+    .fc .fc-toolbar.fc-header-toolbar {
+      z-index: 0;
+    }
+    .fc .fc-button-group {
+        z-index: 0;
+    }
+  </style>
   <div class="row">
     <div class="col-md-12 mb-4">
       <div class="card">
@@ -27,7 +35,7 @@
                           },
                           // Hide saturday and sunday
                           hiddenDays: [6, 0],
-                          slotMinTime: '10:00:00',
+                          slotMinTime: '09:00:00',
                           slotMaxTime: '17:00:00',
                           slotDuration: '00:20:00',
                           slotLabelInterval: '01:00:00',
@@ -82,6 +90,32 @@
                             // classNames: ['font-weight-bold'],
                           });
                         });
+
+                        // Based on the screen size, display the proper view
+                        const changeView = () => {
+                          const mediaQuery = window.matchMedia('(max-width: 992px)');
+                          if (mediaQuery.matches) {
+                            calendar.changeView('listWeek');
+                            calendar.setOption('headerToolbar', {
+                              left: null,
+                              center: 'prev,next today',
+                              right: null,
+                            });
+                          } else {
+                            calendar.changeView('timeGridWeek');
+                            calendar.setOption('headerToolbar', {
+                              left: 'prev,next today',
+                              center: 'title',
+                              right: 'listWeek,timeGridWeek,dayGridMonth',
+                            });
+                          }
+                        }
+
+                        // Run at least once, when the page loads
+                        changeView();
+
+                        // Update calendar view on window resize
+                        window.addEventListener('resize', changeView);
                       </script>
                     @endpush
                   </div>

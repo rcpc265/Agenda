@@ -49,7 +49,10 @@
             margin-top: 5px;
         }
 
-        table {
+        /**
+        * TODO: make the styles more specific so they don't affect non related elements (e.g. the calendar)
+        */
+        /* table {
             margin-top: 15px;
         }
 
@@ -61,7 +64,7 @@
 
         .thead-color {
             background-color: #3A83C3;
-        }
+        } */
 
         .logo {
             height: 80px;
@@ -78,19 +81,17 @@
             /* Establece la altura deseada para la línea vertical */
         }
 
-        hr {
+        /**
+        * TODO: make the styles more specific so they don't affect non related elements (e.g. the calendar)
+        */ hr {
             border-color: black;
-            /* Cambia el color de la línea a negro */
             border-style: solid;
-            /* Establece el estilo de la línea como sólida */
             font-weight: bold;
-            /* Aplica negrita al texto */
-
             margin-top: -70px;
             margin-left: 1%;
             margin-bottom: -0px;
 
-        }
+        } */
 
         .subtitle {
 

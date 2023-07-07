@@ -20,7 +20,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('visits/get', [VisitController::class, 'getVisits'])->name('visits.get');
 
     // Ruta de las secretarias
-    Route::resource('secretaries', SecretaryController::class);
+    Route::resource('secretaries', SecretaryController::class)->middleware('admin');
 
     // Ruta de los visitantes
     Route::resource('visitors', VisitorController::class);
