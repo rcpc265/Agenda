@@ -16,26 +16,22 @@ class VisitController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('visitor');
+
+        $visits = Visit::query()
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('visitor', function ($query) use ($search) {
+                    $query->where('name', 'like', "%$search%");
+                });
+            })
+            ->orderBy('created_at', 'desc');
+
         if (auth()->guest()) {
-            $visits = Visit::query()
-                ->when($search, function ($query, $search) {
-                    return $query->whereHas('visitor', function ($query) use ($search) {
-                        $query->where('name', 'like', "%$search%");
-                    });
-                })
-                ->where('status', 'Confirmado')
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-        } else {
-            $visits = Visit::query()
-                ->when($search, function ($query, $search) {
-                    return $query->whereHas('visitor', function ($query) use ($search) {
-                        $query->where('name', 'like', "%$search%");
-                    });
-                })
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+            $visits = $visits->where('status', 'Confirmado');
         }
+
+        $visits = $visits->orderBy('created_at', 'desc')
+            ->paginate(10);
+
         return view('visits.index', compact('visits'));
     }
 
@@ -46,10 +42,9 @@ class VisitController extends Controller
 
     public function create()
     {
-        $legalVisitors = Visitor::where('entity', 'Persona Jurídica')->orderBy('name')->get();
-        $naturalVisitors = Visitor::where('entity', 'Persona Natural')->orderBy('name')->get();
+        $visitors = Visitor::orderBy('name')->get();
         $entities = Visitor::$entities;
-        return view('visits.create')->with(compact('legalVisitors', 'naturalVisitors', 'entities'));
+        return view('visits.create')->with(compact('visitors', 'entities'));
     }
 
     public function store(StoreVisitRequest $request)
@@ -74,11 +69,10 @@ class VisitController extends Controller
     public function edit(Visit $visit)
     {
         $entities = Visitor::$entities;
-        $legalVisitors = Visitor::where('entity', 'Persona Jurídica')->orderBy('name')->get();
-        $naturalVisitors = Visitor::where('entity', 'Persona Natural')->orderBy('name')->get();
+        $visitors = Visitor::orderBy('name')->get();
         $statuses = Visit::$statuses;
 
-        return view('visits.edit', compact('visit', 'statuses', 'legalVisitors', 'naturalVisitors', 'entities'));
+        return view('visits.edit', compact('visit', 'statuses', 'visitors', 'entities'));
     }
 
     public function update(StoreVisitRequest $request, Visit $visit)
