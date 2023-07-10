@@ -349,14 +349,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.min.js"></script>
     <!-- Full Calendar -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
-    <script>
-        // Save message to local storage
-        localStorage.setItem('copyright', 'This project belongs to "Anatra" all rights reserved.');
-
-        // Retrieve message from local storage
-        const savedMessage = localStorage.getItem('customMessage');
-        console.log(savedMessage); // Outputs: Your custom message goes here
-    </script>
     @stack('script')
 </body>
 

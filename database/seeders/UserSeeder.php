@@ -11,7 +11,6 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        User::factory(5)->create();
         User::updateOrCreate(
             ['name' => 'Soporte'],
             [
@@ -22,5 +21,6 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
+        User::factory(5)->create();
     }
 }
