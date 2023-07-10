@@ -9,7 +9,7 @@ class VisitorController extends Controller
 {
     public function index()
     {
-        $visitors = Visitor::latest()->paginate(5);
+        $visitors = Visitor::latest()->paginate(10);
         return view('visitors.index', compact('visitors'));
     }
 

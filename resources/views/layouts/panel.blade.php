@@ -85,15 +85,15 @@
         }
 
         /**
-        * TODO: make the styles more specific so they don't affect non related elements (e.g. the calendar)
-        */ hr {
+        *TODO make the styles more specific so they don't affect non related elements (e.g. the calendar)
+        */
+        .custom_hr {
             border-color: black;
             border-style: solid;
             font-weight: bold;
             margin-top: -70px;
             margin-left: 1%;
             margin-bottom: -0px;
-
         }
 
         /* .subtitle {
@@ -309,7 +309,7 @@
                 </div>
 
                 <div class="linea-vertical"></div>
-                <hr>
+                <hr class="custom_hr">
             </div>
         @endguest
 
