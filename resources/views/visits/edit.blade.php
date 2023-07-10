@@ -271,7 +271,7 @@
                                 selected>Seleccione un visitante</option>
                             @foreach ($visitors as $visitor)
                                 <option value="{{ $visitor->id }}"
-                                    {{ old('visitor_id', $visitor->id) == $visitor->id ? 'selected' : '' }}>
+                                    {{ old('visitor_id', $visit->visitor->id) === $visitor->id ? 'selected' : '' }}>
                                     {{ $visitor->name }}
                                 </option>
                             @endforeach
