@@ -60,12 +60,15 @@
             color: white;
             font-family: Arial, Helvetica, sans-serif;
 
-        }
+        }*/
 
-        .thead-color {
+
+        .thead-color-portal {
             background-color: #3A83C3;
-        } */
+            color: white;
 
+
+        }
         .logo {
             height: 80px;
             width: 200px;
@@ -91,16 +94,16 @@
             margin-left: 1%;
             margin-bottom: -0px;
 
-        } */
+        }
 
-        .subtitle {
+        /* .subtitle {
 
             font-family: Arial, Helvetica, sans-serif;
             font-size: 4vmin;
             vertical-align: middle;
             color: #ABA2A2;
             padding-top: 6px;
-        }
+        } */
 
         .container {
             display: flex;
@@ -283,6 +286,8 @@
 
 
         @guest()
+
+
             <div class="header bg-gradient-white pb-8 pt-4 pt-md-6">
                 <div class="container">
                     <div class="element">
@@ -293,12 +298,15 @@
                         <div class="linea-vertical"></div>
                     </div>
                     <div class="element">
-                        <h2 class="subtitle">Registro de Visitas</h2>
+                        <h2 style="font-family: Arial, Helvetica, sans-serif;
+                        font-size: 4vmin;
+                        vertical-align: middle;
+                        color: #ABA2A2;
+                        padding-top: 6px;">Registro de Visitas</h2>
                     </div>
 
 
                 </div>
-
 
                 <div class="linea-vertical"></div>
                 <hr>

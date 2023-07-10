@@ -137,7 +137,8 @@
         <table class="table align-items-center table-flush">
 
            @guest
-            <thead class="thead-color"  >
+
+            <thead class="thead-color-portal"  >
            @endguest
 
            @auth
